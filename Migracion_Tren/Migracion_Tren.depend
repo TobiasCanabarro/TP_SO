@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1570815352 source:/home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<stdio_ext.h>
+	<arpa/inet.h>
+	<sys/socket.h>
+	<unistd.h>
+
