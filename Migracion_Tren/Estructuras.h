@@ -10,10 +10,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define IPaConectar "127.0.0.1"
+//#define IPaConectar "192.168.56.1"
 #define LONG_COMANDO 1024
 #define LONGTREN 1024
-#define PUERTO 7400
+//#define PUERTO 7800
 
 typedef enum{
     paso,         //Para los trenes que sólo deben pasar por la estación

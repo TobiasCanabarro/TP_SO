@@ -30,8 +30,6 @@ char * pideComando();
 
 char * sacoPath(char *linea);
 
-char *registrar (char *comando,char *path);
-
 char *acciones (char* accion,char *comando);
 
 char *sacoAccion(char *cad,char separador);
@@ -40,7 +38,7 @@ char *leeFileConfig(char *path);
 
 char *comando();
 
-int cliente(char *tren);
+int cliente(char *tren,char *puerto);
 
 
 

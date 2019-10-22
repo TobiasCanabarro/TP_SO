@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1570815352 source:/home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/main.c
+1571670181 source:/home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -8,4 +8,40 @@
 	<arpa/inet.h>
 	<sys/socket.h>
 	<unistd.h>
+	"Estructuras.h"
+	"Funciones.h"
+
+1571521652 source:/home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/Funciones.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<stdio_ext.h>
+	<arpa/inet.h>
+	<sys/socket.h>
+	<unistd.h>
+	"Estructuras.h"
+	"Funciones.h"
+
+1571160485 /home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/Estructuras.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<stdio_ext.h>
+	<arpa/inet.h>
+	<sys/socket.h>
+	<unistd.h>
+
+1571668207 /home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/Funciones.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	<stdio_ext.h>
+	<arpa/inet.h>
+	<sys/socket.h>
+	<unistd.h>
+	"Estructuras.h"
+	"Funciones.h"
 
