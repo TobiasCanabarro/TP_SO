@@ -21,62 +21,43 @@
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
 
-char * comando(){
-    char *comando = (char*)malloc(sizeof(char)*LONG_COMANDO+1);
-    memset(comando,'\0',LONG_COMANDO+1);
-    printf("usr@-pc : ");
-    __fpurge(stdin);
-    gets(comando);
-    return comando;
+FILE *modeOpenFile(char *path,char *mode){
+    FILE *pFile = NULL;
+    pFile = fopen(path,mode);
+    if(pFile == NULL){
+        printf("Error al leer el archivo configuracion del tren\n");
+        exit(EXIT_FAILURE);
+    }
+    return pFile ;
+}
+
+char * quitPath(char *linea){
+    char *aux = linea;
+    while(*aux && *aux != ' '){
+        aux++;
+    }
+    aux++;
+    return aux;
+}
+
+
+char *readFileConfig(char *path){
+    FILE *pFile = modeOpenFile(path,"r");
+    char *linea = (char*)malloc(sizeof(char)*20);
+    memset(linea,'\0',20);
+    fgets(linea,20,pFile); 
+    fclose(pFile);
+    return linea;
+}
+
+
+int getPort(char *nomEstacion){
     
-}
-
-ST_TREN registrar (char *comando){
-    ST_TREN tren;
-    strtok(comando," ");
-    strcpy(tren.modelo,strtok(NULL," "));
-    tren.infoTren.idTren = atoi(strtok(NULL," "));
-    return tren;
-}
-
-ST_TREN acciones (char* accion,char *comando){
-    printf("%s %s\n",accion,comando);
-    if(strcmp(accion,"solicitar")==0){
-        
+    if(strcmp(nomEstacion,"estacionA")==0){
+        return 7400;
     }
-    if(strcmp(accion,"partir")==0){
-        
+    if(strcmp(nomEstacion,"estacionB")==0){
+        return 7800;
     }
-    if(strcmp(accion,"registrar")){
-        ST_TREN tren = registrar(comando);
-        return tren;
-    }
-    if(strcmp(accion,"estado")==0){
-   
-    }
+    return 8200;
 }
-
-char *sacoAccion(char *cad,char separador){
-    char *auxCad = cad;
-    char *acumCad = (char*)malloc(sizeof(char)*LONG_COMANDO+1);
-    char *auxAcum = acumCad;
-    while(*auxCad){
-        if(*auxCad == separador){
-            *auxAcum = '\0';
-            return acumCad;
-        }
-        *auxAcum = *auxCad;
-        auxAcum++;
-        auxCad++;
-    }
-    return NULL;
-}
-
-ST_TREN opciones (char *comando){
-    char *aux = comando;
-    char *opcion = sacoAccion(aux,' ');
-  
-   ST_TREN tren = acciones(opcion,comando);
-   return tren;
-}
-

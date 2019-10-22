@@ -33,8 +33,8 @@ extern "C" {
 #define MAXBUFFER 1024
 
 #include "ESTRUCTURA.h"
-#include "FN_TRENES.h"
-
+#include "FN_TRENES.h"    
+    
 void inicializaClientSockets(int client_socket[]);
     
 void muestraMsj(char msj[]);
@@ -45,15 +45,19 @@ void recvMsg(int new_socket,char *buffer);
 
 void addSocket(int client_socket[],int new_socket);
 
-void converToStruct(ST_TREN *tren,char *buffer);
+void converToStruct(ST_TREN *tren,char *buffer,char *accion);
 
 void showQueue (ST_ESTACION *estacion);
 
 void disconnected(int sd,int client_socket[],fd_set readfds,struct sockaddr_in address,int addrlen,char *buffer);
 
-int moveToQueue (ST_ESTACION *estacion,ST_TREN *tren,int posQueue);
+void registrar(ST_TREN *tren,ST_ESTACION *estacion,int *posQueue);
 
-void servidor(char numEstacion);
+void processAction (ST_TREN *tren,char *accion,ST_ESTACION *estacion,int *posQueue);
+
+int loadConfig (ST_ESTACION *estacion);
+
+void servidor();
 
 #ifdef __cplusplus
 }

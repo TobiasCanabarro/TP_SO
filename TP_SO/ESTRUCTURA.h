@@ -14,7 +14,7 @@
 #include "FN_TRENES.h"
 #include <stdbool.h>
 
-#define MAXTRENES 2
+#define MAXTRENES 5
 
 #ifndef ESTRUCTURA_H
 #define ESTRUCTURA_H
@@ -23,24 +23,13 @@
 extern "C" {
 #endif
     
-typedef enum{
-    paso,         //Para los trenes que sólo deben pasar por la estación
-    ingreso       //Para los trenes que deben cargar/descargar pasajeros
-}EM_MOTIVO;
-    
- typedef enum {
-    espera,        //0
-    transito,      //1
-    anden,         //2
-}EM_ESTADO;
-
 //se guardan los dato de los trenes que pasan por cada estacion
 
 typedef struct {
     int idTren;
     char estacionOrigen[20];
     char estacionDestino[20];
-    EM_MOTIVO motivo;
+    char motivo[10];//paso, ingreso
 }ST_INFOREG;
 
 typedef  struct {
@@ -48,15 +37,9 @@ typedef  struct {
     char modelo[20];
     int combustible;
     int tiempoEspera;
-    EM_ESTADO estado;
+    char estado[10];//espera, transito,anden
 }ST_TREN;
    
-/*Implementacion de estructura dinamica para cola de espera
-typedef struct nodo{
-    ST_TREN trenEnCola;
-    struct nodo *ste;
-}ST_ColaEspera;
-*/
 typedef struct {
     char nombreEstacion[20];
     ST_TREN colaDeEspera[MAXTRENES];

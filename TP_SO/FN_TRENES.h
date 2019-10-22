@@ -33,16 +33,16 @@ extern "C" {
 #include "ESTRUCTURA.h"
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
+    
+FILE *modeOpenFile(char *path,char *mode);
 
- char * comando();
+ char * quitPath(char *linea);
  
- ST_TREN registrar (char *comando);
+ char *readFileConfig(char *path);
+
  
- ST_TREN acciones (char* accion,char *comando);
+ int getPort(char *puerto);
  
- char *sacoAccion(char *cad,char separador);
- 
- ST_TREN opciones (char *comando);
 
 #ifdef __cplusplus
 }

@@ -19,15 +19,6 @@
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
 
-FILE *modeOpenFile(const char *path,const char *mode){
-    FILE *pFile = NULL;
-    pFile = fopen(path,mode);
-    if(pFile == NULL){
-        printf("Error al leer el archivo configuracion del tren\n");
-        exit(EXIT_FAILURE);
-    }
-    return pFile ;
-}
 
 void initializeClientSocket(int client_socket[]){
     for(int i=0;i<MAX_CLIENTS;i++){
@@ -60,34 +51,35 @@ void addSocket(int client_socket[],int new_socket){
                 printf("Adding to list of sockets as %d\n" , i);
                 break;
                 }
-            }
-    
+            }   
 }
 
-void converToStruct(ST_TREN *tren,char *buffer){
-    // tren->modelo tren->infoTren->idTren tren->tiempoEspera 
-    //tren->combustible tren->infoTren->estacionDestino tren->infoTren->estacionOrigen
-  
-    strcpy(tren->modelo, strtok(buffer," "));
-    tren->infoTren.idTren = atoi(strtok(NULL," "));
-    tren->tiempoEspera = atoi(strtok(NULL," "));
-    tren->combustible = atoi(strtok(NULL," "));
-    strcpy(tren->infoTren.estacionDestino , strtok(NULL," "));
-    strcpy(tren->infoTren.estacionOrigen , strtok(NULL," ")); 
+void converToStruct(ST_TREN *tren,char *buffer,char *accion){
+    /*  accion modelo idTren timepoEspera Combustible estacionDestino estacionOrigen */ 
+    sscanf(buffer,"%s%s%d%d%d%s%s",accion,tren->modelo,&tren->infoTren.idTren,&tren->tiempoEspera,
+    &tren->combustible,tren->infoTren.estacionDestino,tren->infoTren.estacionOrigen);
 }
 
 void showQueue (ST_ESTACION *estacion){
+    printf("--------------------------------------------------------------------------\n");
+    printf("\tEstado de la Cola de Espera para el Anden :\n");
     for(int i=0;i<MAXTRENES;i++){
         printf("%s %d %d %d %s %s \n",estacion->colaDeEspera[i].modelo,estacion->colaDeEspera[i].infoTren.idTren,estacion->colaDeEspera[i].tiempoEspera,estacion->colaDeEspera[i].combustible,estacion->colaDeEspera[i].infoTren.estacionDestino,estacion->colaDeEspera[i].infoTren.estacionOrigen);
     }
-    
 }
 
-int moveToQueue (ST_ESTACION *estacion,ST_TREN *tren,int posQueue){
-    estacion->colaDeEspera[posQueue] = *tren;
-    posQueue++;
-    return posQueue;
+void showAnden(ST_ESTACION *estacion){
+    printf("--------------------------------------------------------------------------\n");
+    printf("\tEstado del Anden :\n");
+    if(estacion->ocupaAnden.infoTren.idTren == 0){
+        printf("Esta VACIO\n");
+    }
+    else{
+        printf("Modelo :%s\n ID del Tren : %d\n Tiempo de Espera : %d\n Combustible :%d\n Estacion Destino :%s\n Estacion Origen :%s\n",
+                estacion->ocupaAnden.modelo,estacion->ocupaAnden.infoTren.idTren,estacion->ocupaAnden.tiempoEspera,estacion->ocupaAnden.combustible,estacion->ocupaAnden.infoTren.estacionDestino,estacion->ocupaAnden.infoTren.estacionOrigen);
+    }
 }
+
 
 void disconnected(int sd,int client_socket[],fd_set readfds,struct sockaddr_in address,int addrlen,char *buffer){
     int valread;
@@ -104,14 +96,112 @@ void disconnected(int sd,int client_socket[],fd_set readfds,struct sockaddr_in a
    }
 }
 
-void servidor(char numEstacion){
+void registrar(ST_TREN *tren,ST_ESTACION *estacion,int *posQueue){
+    estacion->colaDeEspera[*posQueue] = *tren;
+    *posQueue++;
+}
+
+void solicitaAnden(ST_TREN *tren,ST_ESTACION *estacion,int *posQueue){
+    if(estacion->ocupaAnden.infoTren.idTren == 0){
+        estacion->ocupaAnden = *tren;
+    }
+    else{
+        estacion->colaDeEspera[*posQueue] = *tren;
+        *posQueue++;
+    }
+}
+
+void processAction (ST_TREN *tren,char *accion,ST_ESTACION *estacion,int *posQueue){
+    if(strcmp(accion,"registrar")==0){
+        registrar(tren,estacion,posQueue);
+    }
+    if(strcmp(accion,"solicitar")==0){
+        solicitaAnden(tren,estacion,posQueue);
+    }
+    if(strcmp(accion,"estado")==0){
+        
+    }
+    if(strcmp(accion,"partir")==0){
+        
+    }
+
+}
+
+int MystrCmp (char *cad1,char *cad2){
+
+    char *auxCad1 = cad1;
+    char *auxCad2 = cad2;
+
+    int longCad1 = strlen(cad1);
+    int longCad2 = strlen(cad2);
+
+    int cont = 0;
+
+   while(*auxCad1 && *auxCad2){
+        if(*auxCad1 > *auxCad2){
+            return 1;//contMay++
+        }
+        if(*auxCad1 < *auxCad2){
+            return -1;
+        }
+        cont++;
+        auxCad1++;
+        auxCad2++;
+    }
+
+    if(longCad1 == cont && longCad2 == cont){
+        return 0;
+    }
+
+    if(longCad1 == cont){
+        return 1;
+    }
+    if(longCad2 == cont ){
+        return -1;
+    }
+
+    return 0;
+}
+
+void initializaQueue (ST_ESTACION *estacion){
+    estacion->ocupaAnden.infoTren.idTren = 0;
+    for(int i=0;i<MAX_CLIENTS;i++){
+        estacion->colaDeEspera[i].infoTren.idTren = 0;
+    }
+}
+
+char *deleteContraBarra (char *nom){
+    char *aux = nom;
+    char *token = strtok(aux,"\n");
+    return token;
+}
+
+int loadConfig (ST_ESTACION *estacion){
+    printf("--------------------------------------------------\n");
+    char *nomEstacion = (char*)malloc(sizeof(char)*15);
+    memset(estacion->nombreEstacion,'\0',20);
+    printf("\tConfiguracion de ");
+    scanf("%s",nomEstacion);
+    
+    strcpy(estacion->nombreEstacion , readFileConfig(nomEstacion));
+    
+    char *aux = deleteContraBarra(estacion->nombreEstacion);//provisorio :D
+    strcpy(estacion->nombreEstacion,aux);
+    int port = getPort(estacion->nombreEstacion);
+    return port;
+}
+
+void servidor(){
     ST_ESTACION *estacion =(ST_ESTACION*)malloc(sizeof(ST_ESTACION));
     ST_TREN *tren = (ST_TREN*)malloc(sizeof(ST_TREN));
+    initializaQueue(estacion);
+    int port = loadConfig(estacion);
     
     int posQueue = 0;
     int opt = 1;
     int posSocket = 0;
     int master_socket , addrlen , new_socket , client_socket[30] , activity, valread , sd,max_sd;
+    char *accion = (char*)malloc(sizeof(char)*15);
     struct sockaddr_in address;
     
     char buffer[MAXBUFFER+1];
@@ -132,14 +222,15 @@ void servidor(char numEstacion){
 
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons( PORT );
-
+    //address.sin_port = htons( PORT );
+    address.sin_port = htons(port);
+    
     if (bind(master_socket, (struct sockaddr *)&address, sizeof(address))<0){
         perror("ERROR en el bind\n");
         exit(EXIT_FAILURE);
     }
     
-    printf("Escuchando en el puerto : %d \n", PORT);
+    printf("Escuchando en  : %s(%d)\n",estacion->nombreEstacion,port);
 
     if (listen(master_socket, 3) < 0){
         perror("EROR en el listen\n");
@@ -181,13 +272,15 @@ void servidor(char numEstacion){
             
             recvMsg(new_socket,buffer);
             
-            converToStruct(tren,buffer);
+            converToStruct(tren,buffer,accion);
             
-            posQueue = moveToQueue(estacion,tren,posQueue);
+            processAction(tren,accion,estacion,&posQueue);
             
             showQueue(estacion);
             
-            sendMsg(new_socket,"El tren llego bien\n");
+            showAnden(estacion);
+            
+            sendMsg(new_socket,"El tren llego bien!\n");
             
             if(client_socket[posSocket] == 0){
                 client_socket[posSocket] = new_socket;

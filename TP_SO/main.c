@@ -26,10 +26,11 @@
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
 
+
+
 int main(int argc, char** argv) {
-    
-    char numEstacion = 'a';
-    servidor(numEstacion);
+
+    servidor();
     return (EXIT_SUCCESS);
 }
 
