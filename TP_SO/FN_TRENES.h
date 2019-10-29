@@ -42,7 +42,7 @@ FILE *modeOpenFile(char *path,char *mode);
 
  int getPort(char *puerto);
  
- int cliente(char *tren,char *puerto);
+ int cliente(char *tren,int puerto);
  
 
 #ifdef __cplusplus

@@ -57,7 +57,7 @@ void addSocket(int client_socket[],int new_socket){
 void converToStruct(ST_TREN *tren,char *buffer,char *accion){
     /*  accion modelo idTren timepoEspera Combustible estacionDestino estacionOrigen */ 
     sscanf(buffer,"%s%s%d%d%d%s%s",accion,tren->modelo,&tren->infoTren.idTren,&tren->tiempoEspera,
-    &tren->combustible,tren->infoTren.estacionDestino,tren->infoTren.estacionOrigen);
+    &tren->combustible,tren->infoTren.estacionOrigen,tren->infoTren.estacionDestino);
 }
 
 void showQueue (ST_ESTACION *estacion){
@@ -75,8 +75,8 @@ void showAnden(ST_ESTACION *estacion){
         printf("Esta VACIO\n");
     }
     else{
-        printf("Modelo : %s\n ID del Tren : %d\n Tiempo de Espera : %d\n Combustible : %d\n Estacion Destino : %s\n Estacion Origen : %s\n",
-                estacion->ocupaAnden.modelo,estacion->ocupaAnden.infoTren.idTren,estacion->ocupaAnden.tiempoEspera,estacion->ocupaAnden.combustible,estacion->ocupaAnden.infoTren.estacionDestino,estacion->ocupaAnden.infoTren.estacionOrigen);
+        printf("Modelo : %s\n ID del Tren : %d\n Tiempo de Espera : %d m\n Combustible : %d L\n Estacion Origen : %s\n Estacion Destino : %s\n",
+                estacion->ocupaAnden.modelo,estacion->ocupaAnden.infoTren.idTren,estacion->ocupaAnden.tiempoEspera,estacion->ocupaAnden.combustible,estacion->ocupaAnden.infoTren.estacionOrigen,estacion->ocupaAnden.infoTren.estacionDestino);
     }
 }
 
@@ -154,16 +154,47 @@ int loadConfig (ST_ESTACION *estacion){
     return port;
 }
 
-char *converTochar(ST_TREN *tren){
+char *converTochar(ST_TREN *tren,char *accion){
     char *linea = (char*)malloc(sizeof(char)*MAXBUFFER);
-    sprintf(linea,"%s %d %d %d %s %s",tren->modelo,tren->infoTren.idTren,tren->combustible,tren->tiempoEspera,tren->infoTren.estacionOrigen,tren->infoTren.estacionDestino);
+    sprintf(linea,"%s %s %d %d %d %s %s",accion,tren->modelo,tren->infoTren.idTren,tren->combustible,tren->tiempoEspera,tren->infoTren.estacionOrigen,tren->infoTren.estacionDestino);
     return linea;
 }
 
-void processTren(ST_TREN *tren,char *accion,ST_ESTACION *estacion,int *posQueue){
-    char *port = getPort(tren->infoTren.estacionDestino);
-    char *trenConv = converTochar(tren);
-    cliente(trenConv,port);
+void cleanStruct(ST_TREN *tren){
+    tren->combustible = 0;
+    memset(tren->modelo,'\0',20);
+    tren->tiempoEspera = 0;
+    memset(tren->infoTren.estacionDestino ,'\0',20);
+    memset(tren->infoTren.estacionOrigen ,'\0',20);
+    tren->infoTren.idTren = 0;
+}
+
+void processTren(ST_TREN *tren,ST_ESTACION *estacion,int *posQueue,char *buffer){
+    char *accion = (char*)malloc(sizeof(char)*15);
+    printf("Buffer : %s\n",buffer);
+    
+    cleanStruct(tren);
+    converToStruct(tren,buffer,accion);
+    printf("Estacion Destino : %s\n",tren->infoTren.estacionDestino);
+    printf("Nombre de la Estacion : %s\n",estacion->nombreEstacion);
+    
+    if(strcmp(estacion->nombreEstacion,tren->infoTren.estacionDestino)!=0){
+        int port = getPort(tren->infoTren.estacionDestino);
+        char *value = converTochar(tren,accion);
+        printf("Value : %s\n",value);
+        printf("Puerto : %d\n",port);
+        cliente(value,port);
+    }
+    else{
+        converToStruct(tren,buffer,accion);
+        processAction(tren,accion,estacion,posQueue);
+        if(strcmp(accion,"registrar")==0){
+            showQueue(estacion);
+        }
+        if(strcmp(accion,"solicitar")==0){
+             showAnden(estacion);
+        }
+    }
 }
 
 void servidor(){
@@ -176,7 +207,7 @@ void servidor(){
     int opt = 1;
     int posSocket = 0;
     int master_socket , addrlen , new_socket , client_socket[30] , activity, valread , sd,max_sd;
-    char *accion = (char*)malloc(sizeof(char)*15);
+    
     struct sockaddr_in address;
     
     char buffer[MAXBUFFER+1];
@@ -247,15 +278,10 @@ void servidor(){
             
             recvMsg(new_socket,buffer);
             
-            converToStruct(tren,buffer,accion);
+            //converToStruct(tren,buffer,accion);
             
-            processAction(tren,accion,estacion,&posQueue);
-            
-            processTren(tren,accion,estacion,&posQueue);
-            
-            showQueue(estacion);
-            
-            showAnden(estacion);
+            //processAction(tren,accion,estacion,&posQueue);
+            processTren(tren,estacion,&posQueue,buffer);
             
             sendMsg(new_socket,"El tren llego bien!\n");
             

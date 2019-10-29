@@ -60,7 +60,7 @@ int getPort(char *nomEstacion){
     return 8200;
 }
 
-int cliente(char *tren,char *puerto){
+int cliente(char *tren,int puerto){
         int idSocket;
         int activado;
         char msj [50];
@@ -68,7 +68,7 @@ int cliente(char *tren,char *puerto){
         struct sockaddr_in direccionServidor;
         direccionServidor.sin_family = AF_INET;
         direccionServidor.sin_addr.s_addr = inet_addr(IPaConectar);//IP a conectar
-        direccionServidor.sin_port = htons(atoi(puerto));//Puerto a conectar
+        direccionServidor.sin_port = htons(puerto);//Puerto a conectar
 
         idSocket = socket(AF_INET, SOCK_STREAM, 0);
 
