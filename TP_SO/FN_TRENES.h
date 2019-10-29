@@ -40,8 +40,9 @@ FILE *modeOpenFile(char *path,char *mode);
  
  char *readFileConfig(char *path);
 
- 
  int getPort(char *puerto);
+ 
+ int cliente(char *tren,char *puerto);
  
 
 #ifdef __cplusplus

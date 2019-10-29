@@ -75,11 +75,10 @@ void showAnden(ST_ESTACION *estacion){
         printf("Esta VACIO\n");
     }
     else{
-        printf("Modelo :%s\n ID del Tren : %d\n Tiempo de Espera : %d\n Combustible :%d\n Estacion Destino :%s\n Estacion Origen :%s\n",
+        printf("Modelo : %s\n ID del Tren : %d\n Tiempo de Espera : %d\n Combustible : %d\n Estacion Destino : %s\n Estacion Origen : %s\n",
                 estacion->ocupaAnden.modelo,estacion->ocupaAnden.infoTren.idTren,estacion->ocupaAnden.tiempoEspera,estacion->ocupaAnden.combustible,estacion->ocupaAnden.infoTren.estacionDestino,estacion->ocupaAnden.infoTren.estacionOrigen);
     }
 }
-
 
 void disconnected(int sd,int client_socket[],fd_set readfds,struct sockaddr_in address,int addrlen,char *buffer){
     int valread;
@@ -127,42 +126,6 @@ void processAction (ST_TREN *tren,char *accion,ST_ESTACION *estacion,int *posQue
 
 }
 
-int MystrCmp (char *cad1,char *cad2){
-
-    char *auxCad1 = cad1;
-    char *auxCad2 = cad2;
-
-    int longCad1 = strlen(cad1);
-    int longCad2 = strlen(cad2);
-
-    int cont = 0;
-
-   while(*auxCad1 && *auxCad2){
-        if(*auxCad1 > *auxCad2){
-            return 1;//contMay++
-        }
-        if(*auxCad1 < *auxCad2){
-            return -1;
-        }
-        cont++;
-        auxCad1++;
-        auxCad2++;
-    }
-
-    if(longCad1 == cont && longCad2 == cont){
-        return 0;
-    }
-
-    if(longCad1 == cont){
-        return 1;
-    }
-    if(longCad2 == cont ){
-        return -1;
-    }
-
-    return 0;
-}
-
 void initializaQueue (ST_ESTACION *estacion){
     estacion->ocupaAnden.infoTren.idTren = 0;
     for(int i=0;i<MAX_CLIENTS;i++){
@@ -189,6 +152,18 @@ int loadConfig (ST_ESTACION *estacion){
     strcpy(estacion->nombreEstacion,aux);
     int port = getPort(estacion->nombreEstacion);
     return port;
+}
+
+char *converTochar(ST_TREN *tren){
+    char *linea = (char*)malloc(sizeof(char)*MAXBUFFER);
+    sprintf(linea,"%s %d %d %d %s %s",tren->modelo,tren->infoTren.idTren,tren->combustible,tren->tiempoEspera,tren->infoTren.estacionOrigen,tren->infoTren.estacionDestino);
+    return linea;
+}
+
+void processTren(ST_TREN *tren,char *accion,ST_ESTACION *estacion,int *posQueue){
+    char *port = getPort(tren->infoTren.estacionDestino);
+    char *trenConv = converTochar(tren);
+    cliente(trenConv,port);
 }
 
 void servidor(){
@@ -275,6 +250,8 @@ void servidor(){
             converToStruct(tren,buffer,accion);
             
             processAction(tren,accion,estacion,&posQueue);
+            
+            processTren(tren,accion,estacion,&posQueue);
             
             showQueue(estacion);
             
