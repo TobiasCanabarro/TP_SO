@@ -11,8 +11,7 @@
 #include "Estructuras.h"
 #include "Funciones.h"
 
-//#define IPaConectar "127.0.0.1"
-#define IPaConectar "127.0.0.1"
+
 #define LONG_COMANDO 1024
 #define LONGTREN 1024
 #define PUERTO 7400

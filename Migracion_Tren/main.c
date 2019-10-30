@@ -10,7 +10,10 @@
 #include "Estructuras.h"
 #include "Funciones.h"
 
-#define IPaConectar "127.0.0.1"
+#define ipEstacionA "127.0.0.1"
+#define ipEstacionB "192.168.1.16"
+#define ipEstacionC "127.0.0.1"
+
 #define LONG_COMANDO 1024
 #define LONGTREN 1024
 #define PUERTO 7400
@@ -79,15 +82,18 @@ char *sacaEstacion(char *lineaTren){
     return estacionOrigen;
 }
 
-char *obtienePuerto(char *tren){
+char *obtienePuerto(char *tren,char *ip){
     char *estacionOrigen = sacaEstacion(tren);
 
     if(strcmp(estacionOrigen,"estacionA")==0){
+        strcpy(ip,ipEstacionA);
         return "7400";
     }
     if(strcmp(estacionOrigen,"estacionB")==0){
+        strcpy(ip,ipEstacionB);
         return "7800";
     }
+    strcpy(ip,ipEstacionC);
     return "8200";
 }
 
@@ -142,7 +148,7 @@ char *comando(){
     return datosTren;
 }
 
-int cliente(char *tren,char *puerto){
+int cliente(char *tren,char *puerto,char *IPaConectar){
         int idSocket;
         int activado;
         char msj [50];
@@ -164,7 +170,7 @@ int cliente(char *tren,char *puerto){
 
         if(connect(idSocket, (void*) &direccionServidor, sizeof(direccionServidor)) != 0){
             perror("No se pudo conectar al servidor\n.");
-        return 1;
+            return 1;
         }
 
         send(idSocket,tren,strlen(tren),0);
@@ -182,6 +188,7 @@ int cliente(char *tren,char *puerto){
 
 int main(){
 
+    char *ip = (char*)malloc(sizeof(char)*20);
     char *tren = comando();
 
     while(strcmp(tren,"desconocido")==0){
@@ -192,12 +199,14 @@ int main(){
         return 0;
     }
 
-    char *puerto = obtienePuerto(tren);
+    char *puerto = obtienePuerto(tren,ip);
+
     printf("PUERTO : %s\n",puerto);
+    printf("IP : %s\n",ip);
 
     while(strcmp(tren,"exit")!= 0){
 
-        cliente(tren,puerto);
+        cliente(tren,puerto,ip);
         tren = comando();
 
         while(strcmp(tren,"desconocido")==0){
@@ -207,7 +216,7 @@ int main(){
         if(strcmp(tren,"exit")==0){
             return 0;
         }
-        puerto = obtienePuerto(tren);
+        puerto = obtienePuerto(tren,ip);
     }
 
     return 0;

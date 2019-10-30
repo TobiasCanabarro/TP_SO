@@ -10,7 +10,6 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-//#define IPaConectar "192.168.56.1"
 #define LONG_COMANDO 1024
 #define LONGTREN 1024
 //#define PUERTO 7800

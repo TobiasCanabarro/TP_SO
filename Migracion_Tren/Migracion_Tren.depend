@@ -11,7 +11,7 @@
 	"Estructuras.h"
 	"Funciones.h"
 
-1571521652 source:/home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/Funciones.c
+1572464366 source:/home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/Funciones.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -23,7 +23,7 @@
 	"Estructuras.h"
 	"Funciones.h"
 
-1571160485 /home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/Estructuras.h
+1572464366 /home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/Estructuras.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -33,7 +33,7 @@
 	<sys/socket.h>
 	<unistd.h>
 
-1571668207 /home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/Funciones.h
+1572464386 /home/tobias-pc/Escritorio/Programacion/Ejercicios II/Migracion_Tren/Funciones.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
