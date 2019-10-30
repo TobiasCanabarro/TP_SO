@@ -13,9 +13,12 @@
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
 
 #define PORT 7400
-#define IPaConectar "127.0.0.1"
 #define MAXBUFFER 1024
 #define LONG_COMANDO 1024
+
+#define ipEstacionA "127.0.0.1"
+#define ipEstacionB "192.168.1.16"
+#define ipEstacionC "127.0.0.1"
 
 #include "ESTRUCTURA.h"
 #include "FN_ESTACION.h"
@@ -60,14 +63,24 @@ int getPort(char *nomEstacion){
     return 8200;
 }
 
-int cliente(char *tren,int puerto){
+char *getIP (char *nomEstacion){
+    if(strcmp(nomEstacion,"estacionA")==0){
+        return ipEstacionA;
+    }
+    if(strcmp(nomEstacion,"estacionB")==0){
+        return ipEstacionB;
+    }
+    return ipEstacionC;
+}
+
+int cliente(char *tren,int puerto,char *ip){
         int idSocket;
         int activado;
         char msj [50];
         memset(msj,'\0',50);
         struct sockaddr_in direccionServidor;
         direccionServidor.sin_family = AF_INET;
-        direccionServidor.sin_addr.s_addr = inet_addr(IPaConectar);//IP a conectar
+        direccionServidor.sin_addr.s_addr = inet_addr(ip);//IP a conectar
         direccionServidor.sin_port = htons(puerto);//Puerto a conectar
 
         idSocket = socket(AF_INET, SOCK_STREAM, 0);

@@ -18,6 +18,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
+#include <pthread.h>
 
 #define PORT 7400
 #define MAXBUFFER 1024
@@ -29,7 +30,6 @@
 
 
 int main(int argc, char** argv) {
-
     servidor();
     return (EXIT_SUCCESS);
 }
