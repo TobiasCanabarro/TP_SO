@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>ESTRUCTURA.h</itemPath>
+      <itemPath>FN_COMANDOS.h</itemPath>
       <itemPath>FN_ESTACION.h</itemPath>
       <itemPath>FN_TRENES.h</itemPath>
     </logicalFolder>
@@ -15,6 +16,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>FN_COMANDOS.c</itemPath>
       <itemPath>FN_ESTACION.c</itemPath>
       <itemPath>FN_TRENES.c</itemPath>
       <itemPath>main.c</itemPath>
@@ -42,6 +44,10 @@
       <compileType>
       </compileType>
       <item path="ESTRUCTURA.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FN_COMANDOS.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="FN_COMANDOS.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="FN_ESTACION.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -75,6 +81,10 @@
         </asmTool>
       </compileType>
       <item path="ESTRUCTURA.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FN_COMANDOS.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="FN_COMANDOS.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="FN_ESTACION.c" ex="false" tool="0" flavor2="0">
       </item>

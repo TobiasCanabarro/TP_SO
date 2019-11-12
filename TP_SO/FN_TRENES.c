@@ -17,7 +17,7 @@
 #define LONG_COMANDO 1024
 
 #define ipEstacionA "127.0.0.1"
-#define ipEstacionB "192.168.1.16"
+#define ipEstacionB "127.0.0.1"//"192.168.1.16"
 #define ipEstacionC "127.0.0.1"
 
 #include "ESTRUCTURA.h"
@@ -45,9 +45,9 @@ char * quitPath(char *linea){
 
 char *readFileConfig(char *path){
     FILE *pFile = modeOpenFile(path,"r");
-    char *linea = (char*)malloc(sizeof(char)*20);
-    memset(linea,'\0',20);
-    fgets(linea,20,pFile); 
+    char *linea = (char*)malloc(sizeof(char)*80);
+    memset(linea,'\0',80);
+    fgets(linea,80,pFile); 
     fclose(pFile);
     return linea;
 }
@@ -98,6 +98,7 @@ int cliente(char *tren,int puerto,char *ip){
         }
 
         send(idSocket,tren,strlen(tren),0);
+        printf("No esta bloqueado por el SEND\n");
 
         if(recv(idSocket,msj,50,0) < 0){
             printf("Error al enviar el tren %s.\n",tren);

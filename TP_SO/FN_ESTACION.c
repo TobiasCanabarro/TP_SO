@@ -16,13 +16,13 @@
 #define MAX_CLIENTS 5
 
 #define ipEstacionA "127.0.0.1"
-#define ipEstacionB "192.168.1.16"
+#define ipEstacionB "127.0.0.1"//"192.168.1.16"
 #define ipEstacionC "127.0.0.1"
 
 #include "ESTRUCTURA.h"
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
-
+#include "FN_COMANDOS.h"
 
 void initializeClientSocket(int client_socket[]){
     for(int i=0;i<MAX_CLIENTS;i++){
@@ -66,9 +66,11 @@ void converToStruct(ST_TREN *tren,char *buffer,char *accion){
 
 void showQueue (ST_ESTACION *estacion){
     printf("--------------------------------------------------------------------------\n");
-    printf("\tEstado de la Cola de Espera para el Anden :\n");
+    printf("Estado de la Cola de Espera para el Anden :\n");
     for(int i=0;i<MAXTRENES;i++){
-        printf("%s %d %d %d %s %s \n",estacion->colaDeEspera[i].modelo,estacion->colaDeEspera[i].infoTren.idTren,estacion->colaDeEspera[i].tiempoEspera,estacion->colaDeEspera[i].combustible,estacion->colaDeEspera[i].infoTren.estacionDestino,estacion->colaDeEspera[i].infoTren.estacionOrigen);
+        if(estacion->colaDeEspera[i].infoTren.idTren != -1){
+            printf("%s %d %d %d %s %s \n",estacion->colaDeEspera[i].modelo,estacion->colaDeEspera[i].infoTren.idTren,estacion->colaDeEspera[i].tiempoEspera,estacion->colaDeEspera[i].combustible,estacion->colaDeEspera[i].infoTren.estacionDestino,estacion->colaDeEspera[i].infoTren.estacionOrigen);
+        }
     }
 }
 
@@ -87,16 +89,16 @@ void showAnden(ST_ESTACION *estacion){
 void disconnected(int sd,int client_socket[],fd_set readfds,struct sockaddr_in address,int addrlen,char *buffer){
     int valread;
    for (int i = 0; i < MAX_CLIENTS; i++){
-            sd = client_socket[i];
-            if (FD_ISSET( sd , &readfds)){
-                if ((valread = read( sd , buffer, MAXBUFFER)) == 0){
-                    getpeername(sd , (struct sockaddr*)&address ,(socklen_t*)&addrlen);
-                    printf("Host disconnected , ip %s , port %d \n" ,inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
-                    close(sd);
-                    client_socket[i] = 0;
-                }
+        sd = client_socket[i];
+        if (FD_ISSET( sd , &readfds)){
+            if ((valread = read( sd , buffer, MAXBUFFER)) == 0){
+                getpeername(sd , (struct sockaddr*)&address ,(socklen_t*)&addrlen);
+                printf("Host disconnected , ip %s , port %d \n" ,inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
+                close(sd);
+                client_socket[i] = 0;
             }
-   }
+        }
+    }
 }
 
 void registrar(ST_TREN *tren,ST_ESTACION *estacion,int *posQueue){
@@ -105,8 +107,9 @@ void registrar(ST_TREN *tren,ST_ESTACION *estacion,int *posQueue){
 }
 
 void solicitaAnden(ST_TREN *tren,ST_ESTACION *estacion,int *posQueue){
-    if(estacion->ocupaAnden.infoTren.idTren == 0){
+    if(estacion->ocupado == false){
         estacion->ocupaAnden = *tren;
+        estacion->ocupado = true;
     }
     else{
         estacion->colaDeEspera[*posQueue] = *tren;
@@ -121,13 +124,6 @@ void processAction (ST_TREN *tren,char *accion,ST_ESTACION *estacion,int *posQue
     if(strcmp(accion,"solicitar")==0){
         solicitaAnden(tren,estacion,posQueue);
     }
-    if(strcmp(accion,"estado")==0){
-        
-    }
-    if(strcmp(accion,"partir")==0){
-        
-    }
-
 }
 
 void initializaQueue (ST_ESTACION *estacion){
@@ -160,50 +156,57 @@ int loadConfig (ST_ESTACION *estacion){
 
 char *converTochar(ST_TREN *tren,char *accion){
     char *linea = (char*)malloc(sizeof(char)*MAXBUFFER);
+    printf("%s %s\n",tren->infoTren.estacionOrigen,tren->infoTren.estacionDestino);
     sprintf(linea,"%s %s %d %d %d %s %s",accion,tren->modelo,tren->infoTren.idTren,tren->combustible,tren->tiempoEspera,tren->infoTren.estacionOrigen,tren->infoTren.estacionDestino);
     return linea;
 }
 
-void cleanStruct(ST_TREN *tren){
-    tren->combustible = 0;
-    memset(tren->modelo,'\0',20);
-    tren->tiempoEspera = 0;
-    memset(tren->infoTren.estacionDestino ,'\0',20);
-    memset(tren->infoTren.estacionOrigen ,'\0',20);
-    tren->infoTren.idTren = 0;
+char *esReenviado(char *buffer){
+    char *aux = (char*)malloc(sizeof(char)*strlen(buffer)+1);
+    strcpy(aux,buffer);
+    printf("%s\n",aux);
+    char *token = strtok(aux," ");
+    printf("TOKEN : %s\n",token);
+    if(strcmp(token,"reenviado")==0){
+        return token;
+    }
+    return "";
 }
 
-void processTren(ST_TREN *tren,ST_ESTACION *estacion,int *posQueue,char *buffer){
+void processTren(ST_TREN *tren,ST_ESTACION *estacion,int *posQueue,char *buffer,int new_socket){
     char *accion = (char*)malloc(sizeof(char)*15);
     printf("Buffer : %s\n",buffer);
     
-    cleanStruct(tren);
-    converToStruct(tren,buffer,accion);
-    //printf("Estacion Destino : %s\n",tren->infoTren.estacionDestino);
-    //printf("Nombre de la Estacion : %s\n",estacion->nombreEstacion);
-    
-    if(strcmp(estacion->nombreEstacion,tren->infoTren.estacionDestino)!=0){
-        int port = getPort(tren->infoTren.estacionDestino);
-        char *ip = getIP(tren->infoTren.estacionDestino);
-        char *value = converTochar(tren,accion);
-        printf("Value : %s\n",value);
-        printf("Puerto : %d\n",port);
-        cliente(value,port,ip);
+    if(strcmp("reenviado",esReenviado(buffer))==0){
+        registrar(tren,estacion,posQueue);
     }
     else{
         converToStruct(tren,buffer,accion);
-        processAction(tren,accion,estacion,posQueue);
-        if(strcmp(accion,"registrar")==0){
-            showQueue(estacion);
+        if(strcmp(estacion->nombreEstacion,tren->infoTren.estacionDestino)!=0){
+            //sendMsg(new_socket,"El tren llego bien!\n");
+            sendMsg(new_socket,msgCat("El tren ",tren->modelo," paso por la ",estacion->nombreEstacion));
+            int port = getPort(tren->infoTren.estacionDestino);
+            char *ip = getIP(tren->infoTren.estacionDestino);
+            char *value = converTochar(tren,accion);
+            printf("Value : %s\n",value);
+            printf("Puerto : %d\n",port);
+            cliente(value,port,ip);
         }
-        if(strcmp(accion,"solicitar")==0){
-             showAnden(estacion);
+        else{
+            sendMsg(new_socket,msgCat("El tren ",tren->modelo, " reside en la " ,estacion->nombreEstacion));
+            converToStruct(tren,buffer,accion);
+            processAction(tren,accion,estacion,posQueue); 
+            char *value = commandEstacion(estacion,new_socket);
+            while(strcmp(value,"salir")!=0){
+                value = commandEstacion(estacion,new_socket);
+            }
         }
     }
 }
 
 void servidor(){
     ST_ESTACION *estacion =(ST_ESTACION*)malloc(sizeof(ST_ESTACION));
+    estacion->ocupado = false;
     ST_TREN *tren = (ST_TREN*)malloc(sizeof(ST_TREN));
     initializaQueue(estacion);
     int port = loadConfig(estacion);
@@ -282,17 +285,15 @@ void servidor(){
             }
             
             recvMsg(new_socket,buffer);
+           
+            processTren(tren,estacion,&posQueue,buffer,new_socket);
             
-            //converToStruct(tren,buffer,accion);
-            
-            //processAction(tren,accion,estacion,&posQueue);
-            processTren(tren,estacion,&posQueue,buffer);
-            
-            sendMsg(new_socket,"El tren llego bien!\n");
+            //sendMsg(new_socket,"El tren llego bien!\n");
             
             if(client_socket[posSocket] == 0){
                 client_socket[posSocket] = new_socket;
                 printf("Tren añadido al socket : %d\n",posSocket);
+                sendMsg(new_socket,"El tren llego bien!\n");
                 posSocket ++;
             }
             
