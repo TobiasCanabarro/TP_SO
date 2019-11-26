@@ -11,7 +11,7 @@
 #include "Funciones.h"
 
 #define ipEstacionA "127.0.0.1"
-#define ipEstacionB "192.168.1.16"
+#define ipEstacionB "127.0.0.1"//"192.168.1.16"
 #define ipEstacionC "127.0.0.1"
 
 #define LONG_COMANDO 1024
@@ -38,7 +38,7 @@ char *creaTren(){
 char * pideComando(){
     char *comando = (char*)malloc(sizeof(char)*LONG_COMANDO+1);
     memset(comando,'\0',LONG_COMANDO+1);
-    printf("usr@-pc : ");
+    printf("creaTren@ : ");
     __fpurge(stdin);
     gets(comando);
     return comando;
@@ -98,12 +98,12 @@ char *obtienePuerto(char *tren,char *ip){
 }
 
 bool conoceComando(char *accion){
-    return strcmp(accion,"registrar")==0 || strcmp(accion,"estado")==0 || strcmp(accion,"partir")==0 || strcmp(accion,"solicitar")==0 ||strcmp(accion,"exit")==0;
+    return strcmp(accion,"registrar")==0 || strcmp(accion,"solicitarAnden")==0 ||strcmp(accion,"exit")==0;
 }
-
 
 char *procesoAccion (char* accion,char *comando){
     char *auxComando = comando;
+
     char *path = sacoPath(auxComando);
 
     if(conoceComando(accion)){
@@ -138,10 +138,10 @@ char *comando(){
     char *accion = sacoAccion(auxLinea,' ');
 
     char *datosTren = procesoAccion(accion,linea);
-
     if(strcmp(datosTren,"exit")!=0 && strcmp(datosTren,"desconocido")!=0 ){
         char *aux = strcat(accion," ");
         char *tren = strcat(aux,datosTren);
+        printf("%s\n",tren);
         return tren;
     }
 
