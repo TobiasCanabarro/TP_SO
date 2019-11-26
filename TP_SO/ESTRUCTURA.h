@@ -29,7 +29,7 @@ typedef struct {
     int idTren;
     char estacionOrigen[20];
     char estacionDestino[20];
-    char motivo[10];//paso, ingreso
+    char motivo[10]; // paso, ingreso. Se va a usar para el registro de actividad de la estacion
 }ST_INFOREG;
 
 typedef  struct {
@@ -37,14 +37,23 @@ typedef  struct {
     char modelo[20];
     int combustible;
     int tiempoEspera;
-    char estado[10];//espera, transito,anden
+    int pID;
+    int new_socket;
+    char estado[10]; // espera (COLA DE ESPERA) , transito, anden 
 }ST_TREN;
    
+typedef struct nodo{
+    ST_TREN *tren;
+    int tiempoEnCola;
+    struct nodo *ste;
+}ST_NODO;
+
 typedef struct {
     char nombreEstacion[20];
-    ST_TREN colaDeEspera[MAXTRENES];
+    ST_NODO *colaDeEspera;
     ST_TREN ocupaAnden;
     bool ocupado;
+    int new_socket;
 }ST_ESTACION;
 
 #ifdef __cplusplus

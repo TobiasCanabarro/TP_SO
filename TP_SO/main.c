@@ -19,6 +19,7 @@
 #include <netinet/in.h>
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
 #include <pthread.h>
+#include <unistd.h>
 
 #define PORT 7400
 #define MAXBUFFER 1024
@@ -26,10 +27,16 @@
 #include "ESTRUCTURA.h"
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
-
+#include "FN_COMANDOS.h"
 
 int main(int argc, char** argv) {
-    servidor();
+    
+    ST_ESTACION estacion;
+    
+    //strcpy( estacion.nombreEstacion, argv[1] );
+    //createThread( &estacion );
+    servidor(argv[1], &estacion);
+    
     return (EXIT_SUCCESS);
 }
 

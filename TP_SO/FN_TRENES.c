@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include <string.h>   //strlen
+#include <string.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
 #include <errno.h>
-#include <unistd.h>   //close
-#include <arpa/inet.h>    //close
+#include <unistd.h> 
+#include <arpa/inet.h> 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -17,7 +17,7 @@
 #define LONG_COMANDO 1024
 
 #define ipEstacionA "127.0.0.1"
-#define ipEstacionB "127.0.0.1"//"192.168.1.16"
+#define ipEstacionB "127.0.0.1"//"192.168.1.16" <- ip rober
 #define ipEstacionC "127.0.0.1"
 
 #include "ESTRUCTURA.h"
@@ -28,7 +28,7 @@ FILE *modeOpenFile(char *path,char *mode){
     FILE *pFile = NULL;
     pFile = fopen(path,mode);
     if(pFile == NULL){
-        printf("Error al leer el archivo configuracion del tren\n");
+        printf("ERROR AL LEER EL ARCHIVO DE CONFIGURACION\n");
         exit(EXIT_FAILURE);
     }
     return pFile ;
@@ -41,6 +41,18 @@ char * quitPath(char *linea){
     }
     aux++;
     return aux;
+}
+
+char *myStrtok(char *linea,char separador){
+    char *acum = (char*)malloc(sizeof(char)*20);
+    char *aux = acum;
+    while(*linea && *linea != separador){
+        *aux = *linea;
+        linea++;
+        aux++;
+    }
+    *aux = '\0';
+    return acum;
 }
 
 char *readFileConfig(char *path){
@@ -86,26 +98,24 @@ int cliente(char *tren,int puerto,char *ip){
         idSocket = socket(AF_INET, SOCK_STREAM, 0);
 
         if(idSocket < 0){
-            printf("No se pudo conseguir el socket\n");
+            printf("NO SE PUDO CONSEGUIR EL SOCKET\n");
         }
 
         activado = 1;
         setsockopt(idSocket, SOL_SOCKET, SO_REUSEADDR, &activado, sizeof(activado));
 
         if(connect(idSocket, (void*) &direccionServidor, sizeof(direccionServidor)) != 0){
-            perror("No se pudo conectar al servidor\n.");
+            perror("NO SE PUDO CONECTAR AL SERVIDO\n.");
             return 1;
         }
 
         send(idSocket,tren,strlen(tren),0);
-        printf("No esta bloqueado por el SEND\n");
 
         if(recv(idSocket,msj,50,0) < 0){
-            printf("Error al enviar el tren %s.\n",tren);
+            printf("ERROR AL ENVIAR EL TREN %s.\n",tren);
         }
-
-        printf("%s",msj);
+        
         close(idSocket);
-        printf("-------------------------------------------------------------------------------\n");
+        printf("\n-------------------------------------------------------------------------------\n");
         return 0;
 }

@@ -47,17 +47,21 @@ void addSocket(int client_socket[],int new_socket);
 
 void converToStruct(ST_TREN *tren,char *buffer,char *accion);
 
-void showQueue (ST_ESTACION *estacion);
-
 void disconnected(int sd,int client_socket[],fd_set readfds,struct sockaddr_in address,int addrlen,char *buffer);
 
-void registrar(ST_TREN *tren,ST_ESTACION *estacion,int *posQueue);
+void registrar(ST_TREN *tren,ST_ESTACION *estacion);
 
-void processAction (ST_TREN *tren,char *accion,ST_ESTACION *estacion,int *posQueue);
+void processAction (ST_TREN *tren,char *accion,ST_ESTACION *estacion);
 
-int loadConfig (ST_ESTACION *estacion);
+int loadConfig (ST_ESTACION *estacion,char *argv);
 
-void servidor();
+void createThread(ST_ESTACION *estacion);
+
+void killProcess(int pID);
+
+void showTren(ST_TREN *tren);
+
+void servidor(char *argv,ST_ESTACION *estacion);
 
 #ifdef __cplusplus
 }

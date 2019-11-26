@@ -11,28 +11,33 @@
 #include <netinet/in.h>
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
 #include <stdio_ext.h>//__purge
+#include <pthread.h>
 
 #include "ESTRUCTURA.h"
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
+#include "FN_COLADEESPERA.h"
 
 #define COMMAND_LEN 80
 #define MAX_CLIENTS 5
+#define DELETED -1
 
+pthread_mutex_t mutex;
 
 char *requestCommand(ST_ESTACION *estacion){
     char *command = (char*)malloc(sizeof(char)*COMMAND_LEN+1);
     memset(command,'\0',COMMAND_LEN+1);
-    printf("---------------------------------------------------\n");
+    printf("--------------------------------------------------------------------\n");
     printf("%s@ : ",estacion->nombreEstacion);
     __fpurge(stdin);
     gets(command);
+    
     return command;
 }
 
 bool dictionary (char *command){
     return strcmp(command,"estadoTren")==0 || strcmp(command,"partir")==0 || strcmp(command,"exit") ||
-         strcmp(command,"estadoEstacion")==0 || strcmp(command,"eliminar")==0;
+         strcmp(command,"estadoEstacion")==0 || strcmp(command,"eliminar")==0 ||strcmp(command,"limpiar")==0;
 }
 
 char *msgCat(const char *cad1,const char *cad2,const char*cad3,const char *cad4){
@@ -42,12 +47,11 @@ char *msgCat(const char *cad1,const char *cad2,const char*cad3,const char *cad4)
     msj = strcat(msj,cad2);
     msj = strcat(msj,cad3);
     msj = strcat(msj,cad4);
-    msj = strcat(msj,"\n");//->prueba
+    msj = strcat(msj,"\n");
     return msj;
 }
 
 void showEstacion(ST_ESTACION *estacion){
-    printf("---------------------------------------------------------\n");
     printf("Nombre de la estacion : %s\n",estacion->nombreEstacion);
     if(estacion->ocupado == false){
         printf("Estado del Anden : VACIO\n");
@@ -55,126 +59,132 @@ void showEstacion(ST_ESTACION *estacion){
     else{
         printf("Estado del Anden : %s\n",estacion->ocupaAnden.modelo);
     }
-    showQueue(estacion);
+    showQueue(estacion->colaDeEspera);
     printf("\n");
 }
 
-void partirTren(ST_ESTACION *estacion,char *command,int new_socket){
-    char *path = (char*)malloc(sizeof(char)*10);
-    char *estacionDestino = (char*)malloc(sizeof(char)*20);
-    char *auxTren = (char*)malloc(sizeof(char)*200);
-    char *linea = (char*)malloc(sizeof(char)*50);
-    memset(auxTren,'\0',200);
-    
-    printf("%s ",command);
-    __fpurge(stdin);
-    gets(linea);
-    
-    sscanf(linea,"%s %s",path,estacionDestino);
-    
-    char *datosTren = readFileConfig(path);
-    printf("DATOS DEL TREN : %s\n",datosTren);
-    
-    char *ip = getIP(estacionDestino);
-    printf("IP %s\n",ip);
-    
-    int port = getPort(estacionDestino);
-    printf("PUERTO %d\n",port);
-    
-    strcpy(command,"reenviado ");
-    auxTren = strcat(command,datosTren);
-  
-    cliente(auxTren,port,ip);
-    
-    sendMsg(new_socket,msgCat("El tren ",path, " reside en la " ,estacionDestino));//:C
-}
-
-void commandList(){
-    printf("estadoTren, eliminar, salir, partir, estadoEstacion, ayuda\n");
-}
-
-
-int deleteTren(ST_ESTACION *estacion){
-    showEstacion(estacion);
-    char nomTren[10];
-    printf("eliminar ");
-    scanf("%s",nomTren);
-    if(strcmp(estacion->ocupaAnden.modelo,nomTren)==0){
-        estacion->ocupado = false;
-        return 0;
-    }else{
-        for(int i=0;i<MAX_CLIENTS;i++){
-           if(strcmp(estacion->colaDeEspera[i].modelo,nomTren)==0){
-               estacion->colaDeEspera[i].infoTren.idTren = -1;
-               return 0;
-           }
-        }
-    }
-    return 1;
-}
-
 ST_TREN *searchTren (ST_ESTACION *estacion,char *nomTren){
-    ST_TREN *tren = (ST_TREN*)malloc(sizeof(ST_TREN));
+  
     if(strcmp(estacion->ocupaAnden.modelo,nomTren)==0){
-        tren = &estacion->ocupaAnden;
-        return tren;
+        return &estacion->ocupaAnden;
     }else{
-        for(int i=0;i<MAX_CLIENTS;i++){
-            if(strcmp(estacion->colaDeEspera[i].modelo,nomTren)==0){
-                tren = &estacion->colaDeEspera[i];
-                return tren;
-            }
-        }
+        return search((&estacion->colaDeEspera),nomTren);
     }
     return NULL;
 }
 
-void estadoTren (ST_ESTACION *estacion){
-    char nomTren[10];
-    printf("Estado del ");
-    scanf("%s",nomTren);
-    ST_TREN *tren = searchTren(estacion,nomTren);
-    if(tren != NULL){
-        printf("Modelo : %s\n ID del Tren : %d\n Tiempo de Espera : %d m\n Combustible : %d L\n Estacion Origen : %s\n Estacion Destino : %s\n",
-        tren->modelo,tren->infoTren.idTren,tren->combustible,tren->tiempoEspera,
-        tren->infoTren.estacionOrigen,tren->infoTren.estacionDestino);
+int deleteTren(ST_ESTACION *estacion,char *nomTren){
+    if(strcmp(estacion->ocupaAnden.modelo, nomTren)==0){
+        estacion->ocupado = false;
+        killProcess(estacion->ocupaAnden.pID);
     }
     else{
+        ST_TREN *tren = delete((&estacion->colaDeEspera),nomTren);
+        killProcess(tren->pID);
+    }
+    
+   return 0;
+}
+
+
+void partirTren(ST_ESTACION *estacion, char *command, int new_socket ){
+    
+    char *path = (char*)malloc(sizeof(char)*10);
+    char *estacionDestino = (char*)malloc(sizeof(char)*20);
+    
+    char *auxTren = (char*)malloc(sizeof(char)*200);
+    memset(auxTren,'\0',200);
+    
+    path = strtok(NULL ," ");
+    estacionDestino = strtok(NULL," ");
+    
+    char *datosTren = readFileConfig(path);
+    
+    char *ip = getIP(estacionDestino);
+ 
+    int port = getPort(estacionDestino);
+    
+    strcpy(auxTren,"reenviado ");
+    auxTren = strcat(auxTren, datosTren);
+  
+    cliente(auxTren,port,ip);
+    
+    sendMsg(new_socket,msgCat("El ",path, " reside en la " ,estacionDestino));
+    
+    deleteTren(estacion,path);
+}
+
+void commandList(){
+    printf("--------------------------------------------------------------------\n\t\t\tCOMANDOS PERMITIDOS :\n");
+    printf("estadoTren <nombreTren>, eliminar <nombreTren>\npartir <nombreTren> <nombreEstacion>\nestadoEstacion, ayuda, limpiar, salir\n");
+}
+
+void estadoTren (ST_ESTACION *estacion,char *nomTren){
+  
+    ST_TREN *tren = searchTren(estacion,nomTren);
+    
+    if(tren == NULL){
         printf("TREN NO ENCONTRADO\n");
+    }
+    else{
+        printf("Modelo : %s\n ID del Tren : %d\n Tiempo de Espera : %d m\n Combustible : %d L\n Estacion Origen : %s\n Estacion Destino : %s\n",
+        tren->modelo,tren->infoTren.idTren,tren->combustible,tren->tiempoEspera,
+        tren->infoTren.estacionOrigen,tren->infoTren.estacionDestino);   
     }
 }
 
 void processCommand(ST_ESTACION *estacion,char *command,int new_socket){
-    if(strcmp(command,"estadoEstacion")==0){
+    
+    printf("%s\n",command);
+    char *action = strtok(command," ");// saca la accion
+    
+    
+    if(strcmp(action,"estadoEstacion")==0){
         showEstacion(estacion);
     }
-    if(strcmp(command,"partir")==0){
-        partirTren(estacion,command,new_socket);
+    
+    if(strcmp(action,"partir")==0){
+        partirTren(estacion, command, new_socket);
     }
-    if(strcmp(command,"ayuda")==0){
+    
+    if(strcmp(action,"ayuda")==0){
         commandList();
     }
-    if(strcmp(command,"eliminar")==0){
-        if(deleteTren(estacion)==0){
+    
+    if(strcmp(action,"eliminar")==0){      
+        if(deleteTren(estacion,strtok(NULL," "))==0){// estacion , nomTren
             printf("Se elimino exitosamente!\n");
         }
         else{
-            printf("Tren no encontrado!\n");
+            printf("TREN NO ENCOTRADO!\n");
         }
     }
-    if(strcmp(command,"estadoTren")==0){
-        estadoTren(estacion);
+    
+    if(strcmp(action,"estadoTren")==0){
+        estadoTren(estacion,strtok(NULL, " "));//estacion, nomTren
     }
-    //Si es salir no hace nada
+    
+    if(strcmp(action,"limpiar")==0){
+        system("clear");
+    }
 }
 
-char *commandEstacion(ST_ESTACION *estacion,int new_socket){
-    char *command = requestCommand(estacion);// estadoEstacion, partir <nombre del tren> (pregunta por el anden si esta libre, sino lo esta se inserta en la cola de espera 
-    while(!dictionary(command)){
-        printf("comando desconocido\n");
-        command = requestCommand(estacion);
-    }
-    processCommand(estacion,command,new_socket);
+void *commandEstacion(void *station){
+    ST_ESTACION *estacion = station;
+    char *command = requestCommand(estacion);
     
-    return command;
+    pthread_mutex_lock(&mutex);
+    
+    while(strcmp(command,"salir")!=0){
+        while(!dictionary(command)){
+            printf("comando desconocido\n");
+            command = requestCommand(estacion);
+        }
+        processCommand(estacion,command,estacion->new_socket);
+        command = requestCommand(estacion);    
+    }
+    
+    pthread_mutex_unlock(&mutex);
+    
+    //return NULL;
 }

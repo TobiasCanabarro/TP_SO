@@ -22,7 +22,7 @@ extern "C" {
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
 
-char *commandEstacion(ST_ESTACION *estacion,int new_socket);
+void *commandEstacion(void *estacion);
 
 char *msgCat(const char *cad1,const char *cad2,const char*cad3,const char *cad4);
 
