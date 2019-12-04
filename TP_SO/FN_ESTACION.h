@@ -63,6 +63,8 @@ void showTren(ST_TREN *tren);
 
 void servidor(char *argv,ST_ESTACION *estacion);
 
+char *converToChar (ST_TREN *tren, char *accion);
+
 #ifdef __cplusplus
 }
 #endif

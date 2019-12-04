@@ -16,7 +16,7 @@
 #define MAXBUFFER 1024
 #define LONG_COMANDO 1024
 
-#define ipEstacionA "127.0.0.1"
+#define ipEstacionA "127.0.0.1"//"127.0.0.1"
 #define ipEstacionB "127.0.0.1"//"192.168.1.16" <- ip rober
 #define ipEstacionC "127.0.0.1"
 
@@ -109,11 +109,13 @@ int cliente(char *tren,int puerto,char *ip){
             return 1;
         }
 
-        send(idSocket,tren,strlen(tren),0);
-
+        send(idSocket, tren, sizeof(tren), 0);//send(idSocket, tren, strlen(tren), 0)
+        printf("SEND OK\n");
+        
         if(recv(idSocket,msj,50,0) < 0){
             printf("ERROR AL ENVIAR EL TREN %s.\n",tren);
         }
+        printf("RECV OK\n");
         
         close(idSocket);
         printf("\n-------------------------------------------------------------------------------\n");

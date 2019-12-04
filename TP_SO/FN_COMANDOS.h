@@ -21,6 +21,7 @@ extern "C" {
 #include "ESTRUCTURA.h"
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
+#include "FN_COLADEESPERA.h"
 
 void *commandEstacion(void *estacion);
 

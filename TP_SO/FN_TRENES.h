@@ -36,6 +36,8 @@ extern "C" {
     
 FILE *modeOpenFile(char *path,char *mode);
 
+char *myStrtok(char *linea, char separador);
+
  char * quitPath(char *linea);
  
  char *readFileConfig(char *path);
@@ -44,7 +46,7 @@ FILE *modeOpenFile(char *path,char *mode);
  
  char *getIP (char *nomEstacion);
  
- int cliente(char *tren,int puerto,char *ip);
+ int cliente(char *tren, int puerto, char *ip);
  
 
 #ifdef __cplusplus

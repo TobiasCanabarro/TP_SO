@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   FN_COLADEESPERA.c
  * Author: tobias-pc
@@ -22,7 +16,7 @@
 #include "FN_TRENES.h"
 #include "FN_COMANDOS.h"
 
-#define SUBSTRACFUEL 50
+#define SUBSTRACFUEL 20
 #define DELETED -1
 
 
@@ -68,11 +62,17 @@ void sortList(ST_NODO **lista){
     *lista = newList;
 }
 
-void subtractFuel(ST_NODO **lista){
-    ST_NODO *listaAux = *lista;
-    while(listaAux != NULL){
-        (listaAux->tren->combustible) -= SUBSTRACFUEL;
-        listaAux = listaAux->ste;
+void subtractFuel(ST_ESTACION *estacion){
+    if(estacion->ocupado == true){
+       estacion->ocupaAnden.combustible -= SUBSTRACFUEL;
+       return;
+    }
+    else{
+        ST_NODO *listaAux = estacion->colaDeEspera;
+        while(listaAux != NULL){    
+            (listaAux->tren->combustible) -= SUBSTRACFUEL;
+            listaAux = listaAux->ste;
+        }
     }
 }
 
@@ -87,7 +87,7 @@ void showQueue (ST_NODO *lista){
         ST_NODO *listaAux = lista;
         
         while(listaAux != NULL){
-            if(listaAux->tren->combustible < SUBSTRACFUEL){
+            if(listaAux->tren->combustible <= SUBSTRACFUEL){
                 printf("POCO COMBUSTIBLE!!\n");
                 showTren(listaAux->tren);
             }
@@ -99,9 +99,9 @@ void showQueue (ST_NODO *lista){
     }   
 }
 
-ST_TREN *search(ST_NODO **lista,char *nomTren){
-    ST_NODO *listaAux = *lista;
-    while(listaAux != NULL && strcmp(listaAux->tren->modelo, nomTren)!=0){
+ST_TREN *search(ST_NODO *lista,char *nomTren){
+    ST_NODO *listaAux = lista;
+    while(listaAux != NULL && (strcmp(listaAux->tren->modelo, nomTren)!=0)){
         listaAux = listaAux->ste;
     }
     return listaAux->tren;

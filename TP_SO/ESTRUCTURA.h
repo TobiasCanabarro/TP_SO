@@ -27,19 +27,20 @@ extern "C" {
 
 typedef struct {
     int idTren;
-    char estacionOrigen[20];
-    char estacionDestino[20];
-    char motivo[10]; // paso, ingreso. Se va a usar para el registro de actividad de la estacion
+    char estacionOrigen[30];
+    char estacionDestino[30];
+    char motivo[30]; // paso, ingreso. Se va a usar para el registro de actividad de la estacion
 }ST_INFOREG;
 
 typedef  struct {
     ST_INFOREG infoTren;
-    char modelo[20];
+    char modelo[30];
     int combustible;
     int tiempoEspera;
     int pID;
     int new_socket;
     char estado[10]; // espera (COLA DE ESPERA) , transito, anden 
+    char *bufferToSend;
 }ST_TREN;
    
 typedef struct nodo{

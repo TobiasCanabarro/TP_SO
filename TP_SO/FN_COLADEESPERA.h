@@ -25,7 +25,7 @@
 
 void showQueue(ST_NODO *lista);
 
-void subtractFuel(ST_NODO **lista);
+void subtractFuel(ST_ESTACION *estacion);
 
 void sortList(ST_NODO **lista);
 
@@ -33,9 +33,9 @@ ST_TREN *deleteFirst(ST_NODO **lista);
 
 void insertOrdered(ST_NODO **lista, ST_TREN *tren);
 
-ST_TREN *search(ST_NODO **lista,char *nomTren);
+ST_TREN *search(ST_NODO *lista, char *nomTren);
 
-ST_TREN *delete (ST_NODO **lista,char *nomTren);
+ST_TREN *delete (ST_NODO **lista, char *nomTren);
 
 void clearQueue(ST_NODO **lista);
 
