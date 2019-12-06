@@ -65,6 +65,8 @@ void servidor(char *argv,ST_ESTACION *estacion);
 
 char *converToChar (ST_TREN *tren, char *accion);
 
+void solicitaAnden (ST_TREN *tren, ST_ESTACION *estacion);
+
 #ifdef __cplusplus
 }
 #endif

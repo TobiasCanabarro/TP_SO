@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -109,7 +110,7 @@ int cliente(char *tren,int puerto,char *ip){
             return 1;
         }
 
-        send(idSocket, tren, sizeof(tren), 0);//send(idSocket, tren, strlen(tren), 0)
+        send(idSocket, tren, strlen(tren), 0);//send(idSocket, tren, strlen(tren), 0)
         printf("SEND OK\n");
         
         if(recv(idSocket,msj,50,0) < 0){

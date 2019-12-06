@@ -25,7 +25,10 @@ extern "C" {
 
 void *commandEstacion(void *estacion);
 
-char *msgCat(const char *cad1,const char *cad2,const char*cad3,const char *cad4);
+char *msgCat(const char *cad1, const char *cad2, const char*cad3, const char *cad4);
+
+
+
 
 #ifdef __cplusplus
 }

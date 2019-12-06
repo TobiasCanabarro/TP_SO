@@ -36,3 +36,19 @@ solicitarAnden TrenB 2 100 50 estacionB estacionA
 reenviado registrar  TrenA 1 80 10 estacionA estacionA
 registrar  TrenA 1 80 10 estacionA estacionA
 registrar  TrenA 1 80 10 estacionA estacionA
+registra
+registra
+registrar  TrenA 1 80 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 40 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA

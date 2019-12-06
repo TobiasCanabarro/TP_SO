@@ -40,7 +40,6 @@ typedef  struct {
     int pID;
     int new_socket;
     char estado[10]; // espera (COLA DE ESPERA) , transito, anden 
-    char *bufferToSend;
 }ST_TREN;
    
 typedef struct nodo{

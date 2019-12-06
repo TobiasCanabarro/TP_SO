@@ -26,7 +26,7 @@
 #define MAX_SLEEP 1
 #define WAIT 10
 
-#define PATH "/home/tobias-pc/Escritorio/Programacion/Ejercicios/Migracion_Tren/"
+#define PATH "/home/tobias-pc/NetBeansProjects/Tren"
 
 #include "ESTRUCTURA.h"
 #include "FN_ESTACION.h"
@@ -36,47 +36,50 @@
 
 //pthread_mutex_t mutex;
 
+void addClientsSocket(int client_socket[], int new_socket, int *posSocket){
+    if(client_socket[*posSocket] == 0){
+        client_socket[*posSocket] = new_socket;
+        sendMsg(new_socket, "El tren llego bien!\n");
+        *posSocket = *posSocket + 1;
+    } 
+}
+
 void initializeClientSocket(int client_socket[]){
     for(int i=0;i<MAX_CLIENTS;i++){
         client_socket[i] = 0;
     }
 }
 
-void muestraMsj(char msj[]){
-    printf("%s\n",msj);
-}
-
-void sendMsg(int new_socket,char *message){
+void sendMsg(int new_socket, char *message){
     if(send(new_socket, message, strlen(message), 0) != strlen(message)){
         perror("ERROR EN SEND\n");
     }
 }
 
-void recvMsg(int new_socket,char *buffer){
-    memset(buffer,'\0',MAXBUFFER+1);
-     int value = recv(new_socket,buffer,MAXBUFFER+1,0);
+void recvMsg(int new_socket, char *buffer){
+    memset(buffer, '\0', MAXBUFFER + 1);
+     int value = recv(new_socket ,buffer, MAXBUFFER + 1, 0);
         if(value == -1){
             perror("ERROR EN RECV\n");
         }
 }
 
 void converToStruct(ST_TREN *tren,char *buffer, char *accion){
-    /*  Accion Modelo IdTren Combustible  TimepoEspera EstacionDestino EstacionOrigen */
     memset(tren->infoTren.estacionOrigen, '\0', 30);
     memset(tren->infoTren.estacionDestino, '\0', 30);
     memset(tren->modelo, '\0', 30);
-    tren->bufferToSend = NULL;
-    tren->bufferToSend = buffer;
+ 
     sscanf(buffer, "%s %s %d %d %d %s %s", accion, tren->modelo, &tren->infoTren.idTren, &tren->combustible,
     &tren->tiempoEspera, tren->infoTren.estacionOrigen, tren->infoTren.estacionDestino);
 }
 
 void showTren(ST_TREN *tren){
     if(tren->infoTren.idTren != DELETED){
-        printf("Modelo : %s\n ID del Tren : %d\n Combustible : %d L\n Tiempo de Espera : %d m\n Estacion Origen : %s\n Estacion Destino : %s\n",
-        tren->modelo,tren->infoTren.idTren,tren->combustible,tren->tiempoEspera,
-        tren->infoTren.estacionOrigen,tren->infoTren.estacionDestino);
-    }   
+        printf("\n");
+        printf("Modelo : %s\n ID del Tren : %d\n Combustible : %d L\n Tiempo de Espera : %d m\n Estacion Origen : %s\n Estacion Destino : %s\n PID : %d\n Estado Del Tren : %s\n",
+        tren->modelo, tren->infoTren.idTren, tren->combustible, tren->tiempoEspera,
+        tren->infoTren.estacionOrigen, tren->infoTren.estacionDestino, tren->pID, tren->estado);
+    }     
 }
 
 void showAnden(ST_ESTACION *estacion){
@@ -96,23 +99,27 @@ void registrar(ST_TREN *tren,ST_ESTACION *estacion){
     insertOrdered((&estacion->colaDeEspera), tren);
 }
 
+void completeStateTrainAnden (ST_TREN *tren, ST_ESTACION *estacion){
+    printf("SE PUDO SOLICITAR EL ANDEN\n");
+    strcpy(tren->estado, "anden");
+    strcpy(tren->infoTren.motivo, "solicitarAnden ");
+    estacion->ocupaAnden = *tren;
+    estacion->ocupado = true;
+}
+
 void solicitaAnden(ST_TREN *tren, ST_ESTACION *estacion){
-    if(estacion->ocupado == true){
+     if(estacion->ocupado == true){
         if((tren->combustible + tren->tiempoEspera) < (estacion->ocupaAnden.combustible + estacion->ocupaAnden.tiempoEspera)){
-            strcpy(tren->estado, "anden");
-            strcpy(tren->infoTren.motivo, "solicitarAnden ");
-            estacion->ocupaAnden = *tren;
-            estacion->ocupado = true;
+            completeStateTrainAnden (tren, estacion);
         }else{
+            printf("NO SE PUDO SOLICITAR EL ANDEN PORQUE EL TREN QUE ESTA TIENE MAS PRIORIDAD\n");
             strcpy(tren->estado, "espera");
             strcpy(tren->infoTren.motivo, "registrar ");
             insertOrdered(&estacion->colaDeEspera, tren); 
         }
     }
     else{
-        strcpy(tren->estado, "espera");
-        strcpy(tren->infoTren.motivo, "registrar ");
-        insertOrdered(&estacion->colaDeEspera, tren); 
+        completeStateTrainAnden (tren, estacion);
     }
 }
 
@@ -140,19 +147,8 @@ int loadConfigEstacion (ST_ESTACION *estacion, char *path){
     return port;
 }
 
-char *esReenviado(char *buffer){
-    char *aux = (char*)malloc(sizeof(char) * strlen( buffer ) + 1);
-    strcpy(aux, buffer);
-    char *token = strtok(aux, " ");
-    
-    if(strcmp(token, "reenviado")==0){
-        return token;
-    }
-    return "null";
-}
-
-void createThread(ST_ESTACION *estacion){
-    /*
+void createThread(ST_ESTACION *estacion){  
+    /* 
     pthread_t consolaEstacion;
     pthread_mutex_init(&mutex, NULL);
     pthread_create(&consolaEstacion, NULL, commandEstacion, estacion);
@@ -165,10 +161,10 @@ void createThread(ST_ESTACION *estacion){
 }
 
 void killProcess(int pID){
-    char *command = (char*)malloc(sizeof(char)*COMMAND_LEN+1);
-    char *aux = (char*)malloc(sizeof(char)*COMMAND_LEN+1);
+    char *command = (char*)malloc(sizeof(char)*COMMAND_LEN + 1);
+    char *aux = (char*)malloc(sizeof(char)*COMMAND_LEN + 1);
     strcpy(command, "kill -TERM ");
-    sprintf(aux, "%d",pID );//system("kill -TERM <pid>");
+    sprintf(aux, "%d", pID );//system("kill -TERM <pid>");
     command = strcat(command, aux);
     system(command);
 }
@@ -181,16 +177,17 @@ void createProcess(ST_TREN *tren){
         case -1 :
             printf("ERROR AL CREAR EL PROCESO TREN\n");
             break;
-        case 0://HIJO
-            tren->pID = pID;
+        case 0://HIJO    
             execlp(PATH, "registrar", tren->modelo, NULL);
+            tren->pID = getpid();
+            printf("PID HIJO %d\n", tren->pID);
             sleep(MAX_SLEEP);
             break;
         case 1://PADRE
             wait(&timeWait);
+            printf("PID HIJO %d\n", getppid());
             break;
     }
-    printf("SE CREO EL %s Y TIENE DE PID %d\n", tren->modelo, getpid());
 }
 
 char *createPath (ST_ESTACION *estacion){
@@ -204,7 +201,6 @@ char *createPath (ST_ESTACION *estacion){
 void trenReport(ST_ESTACION *estacion, char *buffer){
     char *path = createPath(estacion);
     FILE *pFile = modeOpenFile(path, "a");
-    printf("PRINT REPORT TREN %s\n", buffer);
     buffer = strcat(buffer, "\n");
     fputs(buffer, pFile);
     fclose(pFile);
@@ -216,16 +212,6 @@ char *converToChar(ST_TREN *tren, char *accion){
     tren->tiempoEspera, tren->infoTren.estacionOrigen, tren->infoTren.estacionDestino);
     
     return linea;
-}
-
-void sendTrenToEstacion(ST_TREN *tren, ST_ESTACION *estacion, char *buffer, char *accion, int new_socket){
-    sendMsg(new_socket, msgCat("El tren ", tren->modelo, " paso por la ", estacion->nombreEstacion));
-    int port = getPort(tren->infoTren.estacionDestino);
-    char *ip = getIP(tren->infoTren.estacionDestino);
-    char *trenLinea = converToChar(tren, accion);
-    printf("Puerto : %d\n", port);
-    printf("IP : %s\n", ip);
-    cliente(trenLinea, port, ip);
 }
 
 void processAction (ST_TREN *tren, char *accion, ST_ESTACION *estacion){
@@ -242,15 +228,7 @@ void processAction (ST_TREN *tren, char *accion, ST_ESTACION *estacion){
 void processTren(ST_ESTACION *estacion, ST_TREN *tren, char *buffer, char *accion){
     sendMsg(tren->new_socket, msgCat("El tren ", tren->modelo, " reside en la " , estacion->nombreEstacion));
     createProcess(tren);
-    processAction(tren, accion, estacion);
-    /*
-    ST_TREN *trenAux = lowFuel(estacion);
-    if(trenAux != NULL){
-        printf("%s TIENE POCO COMBUSTIBLE!\n",trenAux->modelo);
-        char *command = requestCommand(estacion);
-        partirTren(estacion, command, estacion->new_socket);
-    }
-    */
+    processAction(tren, accion, estacion);   
 }
 
 void processBuffer(ST_TREN *tren, ST_ESTACION *estacion, char *buffer, int new_socket){
@@ -266,10 +244,7 @@ void processBuffer(ST_TREN *tren, ST_ESTACION *estacion, char *buffer, int new_s
     
     printf("El %s llego de la %s\n", tren->modelo, tren->infoTren.estacionOrigen);
     
-    processTren(estacion, tren, buffer, accion);
-    
-    commandEstacion (estacion);
-    
+    processTren(estacion, tren, buffer, accion);  
 }
 
 void servidor(char *argv, ST_ESTACION *estacion){ // Crea Estacion
@@ -339,7 +314,7 @@ void servidor(char *argv, ST_ESTACION *estacion){ // Crea Estacion
 
         activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);
 
-        if((activity < 0) && (errno!=EINTR)){
+        if((activity < 0) && (errno != EINTR)){
             printf("ERROR EN EL SELECT\n");
         }
 
@@ -350,16 +325,12 @@ void servidor(char *argv, ST_ESTACION *estacion){ // Crea Estacion
             }
             
             recvMsg(new_socket, buffer);
-            
+
+            addClientsSocket (client_socket, new_socket, &posSocket);
+
             processBuffer(tren, estacion, buffer, new_socket);
-     
-            if(client_socket[posSocket] == 0){
-                client_socket[posSocket] = new_socket;
-                //printf("Tren añadido al socket : %d\n",posSocket);
-                sendMsg(new_socket, "El tren llego bien!\n");
-                posSocket ++;
-            }  
+
+            commandEstacion (estacion);
         }
-        //disconnected(sd,client_socket,readfds,address,addrlen,buffer);
     }
 }

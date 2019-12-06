@@ -19,7 +19,6 @@
 #define SUBSTRACFUEL 20
 #define DELETED -1
 
-
 void insertOrdered(ST_NODO **lista,ST_TREN *tren){
 
     ST_NODO *nodo = (ST_NODO*)malloc(sizeof(ST_NODO));
@@ -44,24 +43,6 @@ void insertOrdered(ST_NODO **lista,ST_TREN *tren){
     nodo->ste = listaAux;
 }
 
-ST_TREN *deleteFirst(ST_NODO **lista){
-    ST_NODO *listaAux = *lista;
-    ST_TREN *auxTren = listaAux->tren;
-    *lista = (*lista)->ste;
-    free(listaAux);
-    return auxTren;
-}
-
-void sortList(ST_NODO **lista){
-    ST_NODO *newList = NULL;
-    ST_TREN *tren = NULL;
-    while(*lista != NULL){
-        tren = deleteFirst(lista);
-        insertOrdered(&newList,tren);
-    }
-    *lista = newList;
-}
-
 void subtractFuel(ST_ESTACION *estacion){
     if(estacion->ocupado == true){
        estacion->ocupaAnden.combustible -= SUBSTRACFUEL;
@@ -77,13 +58,13 @@ void subtractFuel(ST_ESTACION *estacion){
 }
 
 void showQueue (ST_NODO *lista){
-    printf("--------------------------------------------------------------------\n");
-    printf("\t\tCOLA DE ESPERA :\n");
+    printf("--------------------------------------------------------------------\n");   
     if(lista == NULL){
-        printf("COLA DE ESPERA VACIA\n");
+        printf("\t\tESTADO DE LA COLA DE ESPERA : VACIA\n");
         return;
     }
     else{
+        printf("\t\tESTADO DE LA COLA DE ESPERA :\n");
         ST_NODO *listaAux = lista;
         
         while(listaAux != NULL){
@@ -126,11 +107,4 @@ ST_TREN *delete(ST_NODO **lista,char *nomTren){
     return tren;
 }
 
-void clearQueue(ST_NODO **lista){
-    ST_NODO *nodoAux = NULL;
-    while(*lista != NULL){
-        nodoAux = *lista;
-        *lista = (*lista)->ste;
-        free(nodoAux);
-    }
-}
+
