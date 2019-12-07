@@ -34,21 +34,16 @@ extern "C" {
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
     
-FILE *modeOpenFile(char *path,char *mode);
-
-char *myStrtok(char *linea, char separador);
-
- char * quitPath(char *linea);
+FILE *modeOpenFile(char *path, char *mode);
  
- char *readFileConfig(char *path);
-
- int getPort(char *puerto);
+ int getPort(char *nomEstacion);
  
  char *getIP (char *nomEstacion);
  
- int cliente(char *tren, int puerto, char *ip);
+ int cliente(char *trenLinea, int puerto, char *ip);
  
-
+ void showTren(ST_TREN *tren);
+ 
 #ifdef __cplusplus
 }
 #endif

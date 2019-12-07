@@ -50,8 +50,8 @@ void initializeClientSocket(int client_socket[]){
     }
 }
 
-void sendMsg(int new_socket, char *message){
-    if(send(new_socket, message, strlen(message), 0) != strlen(message)){
+void sendMsg(int new_socket, char *buffer){
+    if(send(new_socket, buffer, strlen(buffer), 0) != strlen(buffer)){
         perror("ERROR EN SEND\n");
     }
 }
@@ -71,15 +71,6 @@ void converToStruct(ST_TREN *tren,char *buffer, char *accion){
  
     sscanf(buffer, "%s %s %d %d %d %s %s", accion, tren->modelo, &tren->infoTren.idTren, &tren->combustible,
     &tren->tiempoEspera, tren->infoTren.estacionOrigen, tren->infoTren.estacionDestino);
-}
-
-void showTren(ST_TREN *tren){
-    if(tren->infoTren.idTren != DELETED){
-        printf("\n");
-        printf("Modelo : %s\n ID del Tren : %d\n Combustible : %d L\n Tiempo de Espera : %d m\n Estacion Origen : %s\n Estacion Destino : %s\n PID : %d\n Estado Del Tren : %s\n",
-        tren->modelo, tren->infoTren.idTren, tren->combustible, tren->tiempoEspera,
-        tren->infoTren.estacionOrigen, tren->infoTren.estacionDestino, tren->pID, tren->estado);
-    }     
 }
 
 void showAnden(ST_ESTACION *estacion){
@@ -121,17 +112,6 @@ void solicitaAnden(ST_TREN *tren, ST_ESTACION *estacion){
     else{
         completeStateTrainAnden (tren, estacion);
     }
-}
-
-ST_TREN *lowFuel (ST_ESTACION *estacion){
-    if(estacion->ocupaAnden.combustible <= SUBSTRACFUEL){
-        return &estacion->ocupaAnden;
-    }
-    ST_NODO *listaAux = estacion->colaDeEspera;
-    while(listaAux != NULL && listaAux->tren->combustible > SUBSTRACFUEL){
-        listaAux = listaAux->ste;
-    }
-    return listaAux->tren;
 }
 
 void initializaEstacion (ST_ESTACION *estacion){

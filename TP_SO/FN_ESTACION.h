@@ -37,8 +37,6 @@ extern "C" {
     
 void inicializaClientSockets(int client_socket[]);
     
-void muestraMsj(char msj[]);
-
 void sendMsg(int new_socket,char *message);
 
 void recvMsg(int new_socket,char *buffer);
@@ -59,9 +57,17 @@ void createThread(ST_ESTACION *estacion);
 
 void killProcess(int pID);
 
-void showTren(ST_TREN *tren);
+void createProcess(ST_TREN *tren);
 
-void servidor(char *argv,ST_ESTACION *estacion);
+void processAction (ST_TREN *tren, char *accion, ST_ESTACION *estacion);
+
+void addClientsSocket(int client_socket[], int new_socket, int *posSocket);
+
+void servidor(char *argv, ST_ESTACION *estacion);
+
+void processTren(ST_ESTACION *estacion, ST_TREN *tren, char *buffer, char *accion);
+
+void processBuffer(ST_TREN *tren, ST_ESTACION *estacion, char *buffer, int new_socket);
 
 char *converToChar (ST_TREN *tren, char *accion);
 

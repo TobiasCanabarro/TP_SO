@@ -20,6 +20,7 @@
 #define ipEstacionA "127.0.0.1"//"127.0.0.1"
 #define ipEstacionB "127.0.0.1"//"192.168.1.16" <- ip rober
 #define ipEstacionC "127.0.0.1"
+#define DELETED -1
 
 #include "ESTRUCTURA.h"
 #include "FN_ESTACION.h"
@@ -35,44 +36,15 @@ FILE *modeOpenFile(char *path,char *mode){
     return pFile ;
 }
 
-char * quitPath(char *linea){
-    char *aux = linea;
-    while(*aux && *aux != ' '){
-        aux++;
-    }
-    aux++;
-    return aux;
-}
-
-char *myStrtok(char *linea,char separador){
-    char *acum = (char*)malloc(sizeof(char)*20);
-    char *aux = acum;
-    while(*linea && *linea != separador){
-        *aux = *linea;
-        linea++;
-        aux++;
-    }
-    *aux = '\0';
-    return acum;
-}
-
-char *readFileConfig(char *path){
-    FILE *pFile = modeOpenFile(path,"r");
-    char *linea = (char*)malloc(sizeof(char)*80);
-    memset(linea,'\0',80);
-    fgets(linea,80,pFile); 
-    fclose(pFile);
-    return linea;
-}
-
 int getPort(char *nomEstacion){
     
-    if(strcmp(nomEstacion,"estacionA")==0){
+    if(strcmp(nomEstacion, "estacionA")==0){
         return 7400;
     }
-    if(strcmp(nomEstacion,"estacionB")==0){
+    if(strcmp(nomEstacion, "estacionB")==0){
         return 7800;
     }
+    
     return 8200;
 }
 
@@ -84,6 +56,15 @@ char *getIP (char *nomEstacion){
         return ipEstacionB;
     }
     return ipEstacionC;
+}
+
+void showTren(ST_TREN *tren){
+    if(tren->infoTren.idTren != DELETED){
+        printf("\n");
+        printf("Modelo : %s\n ID del Tren : %d\n Combustible : %d L\n Tiempo de Espera : %d m\n Estacion Origen : %s\n Estacion Destino : %s\n PID : %d\n Estado Del Tren : %s\n",
+        tren->modelo, tren->infoTren.idTren, tren->combustible, tren->tiempoEspera,
+        tren->infoTren.estacionOrigen, tren->infoTren.estacionDestino, tren->pID, tren->estado);
+    }     
 }
 
 int cliente(char *tren,int puerto,char *ip){
@@ -100,6 +81,7 @@ int cliente(char *tren,int puerto,char *ip){
 
         if(idSocket < 0){
             printf("NO SE PUDO CONSEGUIR EL SOCKET\n");
+            return 1;
         }
 
         activado = 1;
