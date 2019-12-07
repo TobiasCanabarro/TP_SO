@@ -1,5 +1,5 @@
 
-/* 
+/*
  * File:   FN_ESTACION.h
  * Author: tobias-pc
  *
@@ -33,11 +33,33 @@ extern "C" {
 #define MAXBUFFER 1024
 
 #include "ESTRUCTURA.h"
-#include "FN_TRENES.h"    
-    
+#include "FN_TRENES.h"
+
+/**
+ * @brief Inicialiaza el vector de los clientes sockets.
+ * @param Vector de clientes sockets.
+ * @return 0
+ */
+
 void inicializaClientSockets(int client_socket[]);
-    
+
+void muestraMsj(char msj[]);
+
+/**
+ * @brief Envia un buffer un servidor/cliente Sockets.
+ * @param Un socket.
+ * @param Una cadena con el buffer.
+ * @return 0
+ */
+
 void sendMsg(int new_socket,char *message);
+
+/**
+ * @brief Envia un buffer un servidor/cliente Sockets.
+ * @param Un socket.
+ * @param Una cadena con el buffer.
+ * @return 0
+ */
 
 void recvMsg(int new_socket,char *buffer);
 
@@ -57,17 +79,9 @@ void createThread(ST_ESTACION *estacion);
 
 void killProcess(int pID);
 
-void createProcess(ST_TREN *tren);
+void showTren(ST_TREN *tren);
 
-void processAction (ST_TREN *tren, char *accion, ST_ESTACION *estacion);
-
-void addClientsSocket(int client_socket[], int new_socket, int *posSocket);
-
-void servidor(char *argv, ST_ESTACION *estacion);
-
-void processTren(ST_ESTACION *estacion, ST_TREN *tren, char *buffer, char *accion);
-
-void processBuffer(ST_TREN *tren, ST_ESTACION *estacion, char *buffer, int new_socket);
+void servidor(char *argv,ST_ESTACION *estacion);
 
 char *converToChar (ST_TREN *tren, char *accion);
 

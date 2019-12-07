@@ -1,5 +1,5 @@
 
-/* 
+/*
  * File:   FN_TRENES.h
  * Author: tobias-pc
  *
@@ -33,17 +33,52 @@ extern "C" {
 #include "ESTRUCTURA.h"
 #include "FN_ESTACION.h"
 #include "FN_TRENES.h"
-    
-FILE *modeOpenFile(char *path, char *mode);
- 
- int getPort(char *nomEstacion);
- 
+
+/**
+*@brief Abre el archivo de configuracion en el modo requerido
+*@param A Path del archivo
+*@param B modo de apertura del archivo
+*@return Puntero del archivo de tipo *FILE
+*/
+
+FILE *modeOpenFile(char *path,char *mode);
+
+
+
+ char *myStrtok(char *linea, char separador);
+
+ char * quitPath(char *linea);
+
+ char *readFileConfig(char *path);
+
+/**
+ * @brief Asigna un puerto a determinada estacion.
+ * @param A Nombre de estacion.
+ * @return Un entero del numero del puerto.
+ */
+
+
+ int getPort(char *puerto);
+
+ /**
+ * @brief Asigna una ip a determinada estacion.
+ * @param A Nombre de estacion.
+ * @return Una cadena con la ip.
+ */
+
  char *getIP (char *nomEstacion);
- 
- int cliente(char *trenLinea, int puerto, char *ip);
- 
- void showTren(ST_TREN *tren);
- 
+
+ /**
+ * @brief Crea una nueva conexion de tipo cliente.
+ * @param Una cadena con los datos del tren
+ * @param Un entero con el puerto.
+ * @param Una cadena con la ip.
+ * @return Devuelve un entero como identificador si fue exitasa la operacion 0/1.
+ */
+
+ int cliente(char *tren, int puerto, char *ip);
+
+
 #ifdef __cplusplus
 }
 #endif
