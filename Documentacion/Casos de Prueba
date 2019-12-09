@@ -1,10 +1,25 @@
 CASOS DE PRUEBA:
 
-1- levantar estacion, crear 3 trenes.
+1- Levantar estacion, crear 3 trenes y ver el estado de la estacion.
+a) Ingresar "./estacion estacionA" en la terminal de estacion.
+b) Ingresar "./tren registrar trenA" en la terminal de trenes para crear un tren.
+c) Ingresar "./tren registrar trenC" en la terminal de trenes para crear un tren.
+d) Ingresar "./tren registrar trenD" en la terminal de trenes para crear un tren.
+e) Ingresar "estadoEstacion" en la terminal de estacionA.
+resultado: Muestra por pantalla a los trenes en la cola de espera de la estacionA.
+
 
 2- levantar 2 estaciones, enviar un tren de una a otra.
+a) Ingresar "./estacion estacionA" en la terminal de estacion.
+b) Ingresar "./estacion estacionB" en otra terminal de estacion.
+c) Ingresar "./tren registrar trenA" en la terminal de trenes para crear un tren.
+d) Ingresar "solicitarAnden TrenA" en la terminal de estacionA.
+e) Ingresar "partir TrenA estacionB" en la terminal de estacionA.
+f) Ingresar "estadoEstacion" en la terminal de la estacionB.
+Resultado: Muestra al tren llegado desde la estacionA en la lista de espera de la estacionB.
 
 3- levantar 2 estaciones con un tren cada una, enviar cada tren a la otra estacion.
+
 
 4 levantar 2 estaciones, crear 3 trenes en estacion A, crear 2 trenes en estacion B y enviar uno a Estacion A.
 
