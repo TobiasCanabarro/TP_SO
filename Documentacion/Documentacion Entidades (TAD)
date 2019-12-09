@@ -1,0 +1,22 @@
+Documentacion de entidades(TAD)
+
+Modulo Tren.
+ESTRUCTURAS: Contiene un conjunto de datos que contituyen a los trenes.
+
+FUNCIONES: Se encuentran parte de las acciones que realizan los trenes.
+
+
+
+Modulo Estacion.
+ESTRUCTURA: Contiene un conjunto de datos necesarios para dar de alta una estacion.
+
+FN_COLADEESPERA: Se encuentran las acciones que se realizan en la cola de espera.
+
+FN_COMANDOS: Contiene la informacion necesaria para poder recibir comandos en una estacion.
+
+FN_ESTACION: Contiene al conjunto de acciones que pueden realizar las estaciones.
+
+FN_TRENES: Contiene acciones que realizan los trenes en su relacion con las estaciones.
+
+
+
