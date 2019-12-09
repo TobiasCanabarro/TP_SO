@@ -1,0 +1,15 @@
+CASOS DE PRUEBA:
+
+1- levantar estacion, crear 3 trenes.
+
+2- levantar 2 estaciones, enviar un tren de una a otra.
+
+3- levantar 2 estaciones con un tren cada una, enviar cada tren a la otra estacion.
+
+4 levantar 2 estaciones, crear 3 trenes en estacion A, crear 2 trenes en estacion B y enviar uno a Estacion A.
+
+5- levantar 3 estaciones, crear 2 trenes en A y enviarlas a B y C y retornarlas.
+
+6- intentar enviar un tren que no se encuentra en Anden hacia otra estacion.
+
+7- 
