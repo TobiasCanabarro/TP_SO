@@ -80,7 +80,7 @@ void showAnden(ST_ESTACION *estacion){
         printf("ESTA VACIO!\n");
     }
     else{
-        showTren((&estacion->ocupaAnden));
+        showTren( (&estacion->ocupaAnden) );
     }
 }
 
@@ -122,22 +122,22 @@ void initializaEstacion (ST_ESTACION *estacion){
 
 int loadConfigEstacion (ST_ESTACION *estacion, char *path){
     strcpy(estacion->nombreEstacion , path);
-    printf("-----------------------------------%s------------------------------------\n",estacion->nombreEstacion);
+    printf("-----------------------------------%s------------------------------------\n", estacion->nombreEstacion);
     int port = getPort(estacion->nombreEstacion);
     return port;
 }
 
 void createThread(ST_ESTACION *estacion){  
-    /* 
+    
     pthread_t consolaEstacion;
-    pthread_mutex_init(&mutex, NULL);
+    //pthread_mutex_init(&mutex, NULL);
     pthread_create(&consolaEstacion, NULL, commandEstacion, estacion);
     sleep(MAX_SLEEP);
     pthread_join(consolaEstacion, NULL);
     
     pthread_cancel(consolaEstacion);
     printf("--------------------------------------------------------------------\n");
-    */
+    
 }
 
 void killProcess(int pID){
@@ -150,8 +150,7 @@ void killProcess(int pID){
 }
 
 void createProcess(ST_TREN *tren){
-    int pID = fork();
-    
+    int pID = fork(); 
     int timeWait = WAIT;
     switch(pID){
         case -1 :
@@ -165,13 +164,13 @@ void createProcess(ST_TREN *tren){
             break;
         case 1://PADRE
             wait(&timeWait);
-            printf("PID HIJO %d\n", getppid());
+            printf("PID PADRE %d\n", getppid());
             break;
     }
 }
 
 char *createPath (ST_ESTACION *estacion){
-    char *path = (char*)malloc(sizeof(char)*100);
+    char *path = (char*)malloc(sizeof(char) * 100);
     strcpy(path, "registroDeTrenes");
     path = strcat(path, estacion->nombreEstacion);
     path = strcat(path, ".txt");
@@ -227,11 +226,12 @@ void processBuffer(ST_TREN *tren, ST_ESTACION *estacion, char *buffer, int new_s
     processTren(estacion, tren, buffer, accion);  
 }
 
-void servidor(char *argv, ST_ESTACION *estacion){ // Crea Estacion
+void servidor(char *argv){
     ST_TREN *tren = (ST_TREN*)malloc(sizeof(ST_TREN));
-    
-    initializaEstacion(estacion);
-    int port = loadConfigEstacion(estacion, argv);
+    ST_ESTACION estacion;
+
+    initializaEstacion(&estacion);
+    int port = loadConfigEstacion(&estacion, argv);
    
     int posSocket = 0;
     int opt = 1;
@@ -250,21 +250,21 @@ void servidor(char *argv, ST_ESTACION *estacion){ // Crea Estacion
         perror("ERROR AL PEDIR EL SOCKET\n");
         exit(EXIT_FAILURE);
     }
-    if(setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt,sizeof(opt)) < 0 ){
+    if(setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0 ){
         perror("ERROR EN EL SETSOCKPOT\n");
         exit(EXIT_FAILURE);
     }
 
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(port);
+    address.sin_port = htons( port );
     
-    if (bind(master_socket, (struct sockaddr *)&address, sizeof(address))<0){
+    if (bind(master_socket, (struct sockaddr *)&address, sizeof(address)) < 0){
         perror("ERROR EN EL BIND\n");
         exit(EXIT_FAILURE);
     }
     
-    printf("ESCUCHANDO EN  : %s(%d)\n", estacion->nombreEstacion, port);
+    printf("ESCUCHANDO EN  : %s(%d)\n", estacion.nombreEstacion, port);
 
     if (listen(master_socket, 3) < 0){
         perror("ERROR EN EL LISTEN\n");
@@ -308,9 +308,9 @@ void servidor(char *argv, ST_ESTACION *estacion){ // Crea Estacion
 
             addClientsSocket (client_socket, new_socket, &posSocket);
 
-            processBuffer(tren, estacion, buffer, new_socket);
+            processBuffer(tren, &estacion, buffer, new_socket);
 
-            commandEstacion (estacion);
+            createThread (&estacion);
         }
     }
 }

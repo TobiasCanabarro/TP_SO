@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
+/* 
  * File:   FN_COLADEESPERA.h
  * Author: tobias-pc
  *
@@ -15,7 +9,7 @@
 #define FN_COLADEESPERA_H
 
 #include <stdio.h>
-#include <string.h>
+#include <string.h>  
 #include <stdlib.h>
 #include <stdbool.h>
 #include "ESTRUCTURA.h"
@@ -25,51 +19,41 @@
 
 /**
  * @brief Muestra la cola de espera.
- * @param Estructura de cola.
- * @return 0
+ * @lista Estructura de cola.
+ * @return void
  */
-
 void showQueue(ST_NODO *lista);
 
 /**
- * @brief Resta combustible de los trenes.
- * @param La estructura de la estacion.
- * @return 0
+ * @brief Disminuye el combustible de todos los tren que estan en la estacion.
+ * @estacion La estructura de la estacion.
+ * @return void
  */
-
 void subtractFuel(ST_ESTACION *estacion);
 
-void sortList(ST_NODO **lista);
-
-ST_TREN *deleteFirst(ST_NODO **lista);
-
 /**
- * @brief Inserte de forma ordenada la lista.
- * @param La cola de espera.
- * @param Un puntero de la estructura del tren.
- * @return 0
+ * @brief Inserte un tren en lista de forma ordenada.
+ * @lista La cola de espera.
+ * @tren Un puntero de la estructura del tren.
+ * @return void
  */
-
 void insertOrdered(ST_NODO **lista, ST_TREN *tren);
 
-/**
- * @brief Busca un nodo de la lista (cola de espera).
- * @param La cola de espera.
- * @param Una cadena del nombre del tren.
- * @return Estructura del tren.
- */
-
-ST_TREN *search(ST_NODO *lista, char *nomTren);
 
 /**
- * @brief Elimina el tren de la cola de espera.
- * @param La cola de espera.
- * @param Una cadena del nombre del tren.
- * @return Estructura del tren.
+ * @brief Busca un tren en la cola de espera y lo retorna.
+ * @lista La cola de espera.
+ * @nomTren nombre del tren.
+ * @return tren buscado
  */
+ST_TREN *searchInQueue(ST_NODO *lista, char *nomTren);
 
-ST_TREN *delete (ST_NODO **lista, char *nomTren);
-
-void clearQueue(ST_NODO **lista);
+/**
+ * @brief Elimina un tren deseado de la cola de espera.
+ * @lista La cola de espera.
+ * @nomTren Nombre del tren.
+ * @return El tren que fue eliminado
+ */
+ST_TREN *deleteTrenInQueue(ST_NODO **lista, char *nomTren);
 
 #endif /* FN_COLADEESPERA_H */

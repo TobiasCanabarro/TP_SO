@@ -1,5 +1,5 @@
 
-/*
+/* 
  * File:   FN_TRENES.h
  * Author: tobias-pc
  *
@@ -36,49 +36,41 @@ extern "C" {
 
 /**
 *@brief Abre el archivo de configuracion en el modo requerido
-*@param A Path del archivo
-*@param B modo de apertura del archivo
-*@return Puntero del archivo de tipo *FILE
+*@path  Path del archivo
+*@mode Modo de apertura del archivo
+*@return Puntero del archivo de tipo
 */
-
-FILE *modeOpenFile(char *path,char *mode);
-
-
-
- char *myStrtok(char *linea, char separador);
-
- char * quitPath(char *linea);
-
- char *readFileConfig(char *path);
+FILE *modeOpenFile(char *path, char *mode);
 
 /**
- * @brief Asigna un puerto a determinada estacion.
- * @param A Nombre de estacion.
- * @return Un entero del numero del puerto.
- */
+*@brief Obtiene el puerto que se requiere para la conexion, a traves del nombre de la estacion 
+*@nomEstacion Nombre de la estacion
+*@return Puntero del archivo de tipo *FILE
+*/
+int getPort(char *nomEstacion);
 
+/**
+*@brief Obtiene la ip que se requiere para la conexion, a traves del nombre de la estacion 
+*@nomEstacion Nombre de la estacion
+*@return Puntero del archivo de tipo *FILE
+*/
+char *getIP (char *nomEstacion);
+ 
+/**
+*@brief Establece una conexion del tipo cliente, a un ip y un puerto en especifico
+*@puerto Numero del puerto 
+*@ip Cadena de texto
+*@return 0 o 1, si se pudo realizar la conexion
+*/
+int cliente(char *trenLinea, int puerto, char *ip);
 
- int getPort(char *puerto);
-
- /**
- * @brief Asigna una ip a determinada estacion.
- * @param A Nombre de estacion.
- * @return Una cadena con la ip.
- */
-
- char *getIP (char *nomEstacion);
-
- /**
- * @brief Crea una nueva conexion de tipo cliente.
- * @param Una cadena con los datos del tren
- * @param Un entero con el puerto.
- * @param Una cadena con la ip.
- * @return Devuelve un entero como identificador si fue exitasa la operacion 0/1.
- */
-
- int cliente(char *tren, int puerto, char *ip);
-
-
+/**
+*@brief Muestra el estado de un tren en especifico 
+*@tren Estructura del tren
+*@return void
+*/
+void showTren(ST_TREN *tren);
+ 
 #ifdef __cplusplus
 }
 #endif

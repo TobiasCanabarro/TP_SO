@@ -157,3 +157,25 @@ registrar TrenA 1 100 10 estacionA estacionB
 
 solicitarAnden TrenA 1 100 10 estacionA estacionB
 
+registrar TrenA 1 100 10 estacionA estacionB
+
+solicitarAnden  TrenA 1 60 10 estacionA estacionB
+solicitarAnden  TrenA 1 20 10 estacionA estacionB
+registrar TrenA 1 100 10 estacionA estacionB
+
+registrar  TrenA 1 60 10 estacionA estacionB
+registrar TrenA 1 100 10 estacionA estacionB
+
+registrar TrenA 1 100 10 estacionA estacionB
+
+registrar TrenA 1 100 10 estacionA estacionB
+
+registrar TrenA 1 100 10 estacionA estacionB
+
+registrar TrenA 1 100 10 estacionA estacionB
+
+registrar TrenA 1 100 10 estacionA estacionB
+
+registrar  TrenA 1 60 10 estacionB estacionA
+registrar TrenA 1 100 10 estacionA estacionB
+

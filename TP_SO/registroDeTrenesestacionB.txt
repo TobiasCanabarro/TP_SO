@@ -52,3 +52,16 @@ registrar  TrenA 1 80 10 estacionA estacionA
 solicitarAnden  TrenA 1 40 10 estacionA estacionA
 registrar  TrenA 1 80 10 estacionA estacionA
 solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 40 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+registrar  TrenA 1 40 10 estacionA estacionA
+registrar TrenB 2 100 50 estacionB estacionA
+
+registrar TrenB 2 100 50 estacionB estacionA
+
+registrar TrenB 2 100 50 estacionB estacionA
+
+registrar  TrenA 1 80 10 estacionA estacionB
+registrar  TrenA 1 80 10 estacionA estacionB
+registrar  TrenA 1 40 10 estacionA estacionB

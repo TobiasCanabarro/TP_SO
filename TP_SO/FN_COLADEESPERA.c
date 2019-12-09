@@ -69,8 +69,10 @@ void showQueue (ST_NODO *lista){
         
         while(listaAux != NULL){
             if(listaAux->tren->combustible <= SUBSTRACFUEL){
-                printf("POCO COMBUSTIBLE!!\n");
-                showTren(listaAux->tren);
+                printf("\n");
+                printf("Modelo : %s\n ID del Tren : %d\n Combustible (POCO COMBUSTIBLE!) : %d L\n Tiempo de Espera : %d m\n Estacion Origen : %s\n Estacion Destino : %s\n PID : %d\n Estado Del Tren : %s\n",
+                listaAux->tren->modelo, listaAux->tren->infoTren.idTren, listaAux->tren->combustible, listaAux->tren->tiempoEspera,
+                listaAux->tren->infoTren.estacionOrigen, listaAux->tren->infoTren.estacionDestino, listaAux->tren->pID, listaAux->tren->estado);                   
             }
             else{
                 showTren(listaAux->tren);
@@ -80,7 +82,8 @@ void showQueue (ST_NODO *lista){
     }   
 }
 
-ST_TREN *search(ST_NODO *lista,char *nomTren){
+
+ST_TREN *searchInQueue(ST_NODO *lista,char *nomTren){
     ST_NODO *listaAux = lista;
     while(listaAux != NULL && (strcmp(listaAux->tren->modelo, nomTren)!=0)){
         listaAux = listaAux->ste;
@@ -88,7 +91,7 @@ ST_TREN *search(ST_NODO *lista,char *nomTren){
     return listaAux->tren;
 }
 
-ST_TREN *delete(ST_NODO **lista,char *nomTren){
+ST_TREN *deleteTrenInQueue(ST_NODO **lista, char *nomTren){
     ST_NODO *listaAux = *lista;
     ST_NODO *nodoAnt = NULL;
     

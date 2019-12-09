@@ -21,7 +21,6 @@
 #include <pthread.h>
 #include <unistd.h>
 
-#define PORT 7400
 #define MAXBUFFER 1024
 
 #include "ESTRUCTURA.h"
@@ -30,12 +29,8 @@
 #include "FN_COMANDOS.h"
 
 int main(int argc, char** argv) {
-    
-    ST_ESTACION estacion;
-    
-    //strcpy( estacion.nombreEstacion, argv[1] );
-    //createThread( &estacion );
-    servidor(argv[1], &estacion);
+  
+    servidor(argv[1]);
     
     return (EXIT_SUCCESS);
 }

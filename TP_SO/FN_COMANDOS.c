@@ -74,7 +74,7 @@ ST_TREN *searchTren (ST_ESTACION *estacion, char *nomTren){
         }
     }      
     else{
-        ST_TREN *tren = search(estacion->colaDeEspera, nomTren);
+        ST_TREN *tren = searchInQueue (estacion->colaDeEspera, nomTren);
         return tren;
     }
     return NULL;
@@ -87,7 +87,7 @@ int deleteTren(ST_ESTACION *estacion,char *nomTren){
         //killProcess(estacion->ocupaAnden.pID);
     }
     else{
-        ST_TREN *tren = delete(&estacion->colaDeEspera, nomTren);
+        ST_TREN *tren = deleteTrenInQueue(&estacion->colaDeEspera, nomTren);
         if(tren == NULL){
             return 1;
         }
@@ -96,15 +96,16 @@ int deleteTren(ST_ESTACION *estacion,char *nomTren){
    return 0;
 }
 
-char * searchTrenToSend (ST_ESTACION *estacion, char *estacionDestino){
+char *processTrainToSend (ST_ESTACION *estacion, char *nomTren, char *estacionDestino){
     char *trenLinea = (char*)malloc(sizeof(char) * LINEA_LEN + 1);
-    ST_TREN *tren = searchTren(estacion, estacionDestino);
+
+    ST_TREN *tren = searchInQueue(estacion->colaDeEspera, nomTren);
     if(tren == NULL){
         return NULL;
     }
     strcpy(tren->infoTren.estacionDestino, estacionDestino);
-    strcpy(tren->infoTren.estacionDestino, estacion->nombreEstacion);
-    
+    strcpy(tren->infoTren.estacionOrigen, estacion->nombreEstacion);
+
     trenLinea = converToChar(tren, tren->infoTren.motivo);
     
     return trenLinea;
@@ -113,16 +114,15 @@ char * searchTrenToSend (ST_ESTACION *estacion, char *estacionDestino){
 void partirTren(ST_ESTACION *estacion, char *command, int new_socket ){
   
     char *nomTren = strtok(NULL , " ");
-    char *estacionDestino = strtok(NULL," ");
-    char *trenLinea = searchTrenToSend(estacion, nomTren);
+    char *estacionDestino = strtok(NULL, " ");
     
-    if(trenLinea == NULL){
-        printf("ERROR TREN NO ENCONTRADO!\n");
+    char *trenLinea = processTrainToSend(estacion, nomTren, estacionDestino);
+
+    if(deleteTren(estacion, nomTren) == 1){
+        printf("ERROR EL TREN NO SE ENCONTRO\n");
         return;
     }
 
-    deleteTren(estacion, nomTren);
-    
     char *ip = getIP(estacionDestino);
  
     int port = getPort(estacionDestino);
@@ -133,13 +133,11 @@ void partirTren(ST_ESTACION *estacion, char *command, int new_socket ){
     cliente(trenLinea, port, ip);
     
     printf("CLIENTE OK\n");
-    
-    //sendMsg(new_socket, msgCat("El ", nomTren, " reside en la " , estacionDestino));
 }
 
 void commandList(){
     printf("--------------------------------------------------------------------\n\t\t\tCOMANDOS PERMITIDOS :\n");
-    printf("estadoTren <nombreTren>, eliminar <nombreTren>, solicitarAnden <nombreTren>\npartir <nombreTren> <nombreEstacion>\nestadoEstacion, ayuda, limpiar, salir\n");
+    printf("estadoTren <nombreTren>, eliminar <nombreTren>, solicitarAnden <nombreTren>\npartir <nombreTren> <nombreEstacion>\nestadoEstacion, ayuda, limpiar,actualizar, salir\n");
 }
 
 void estadoTren (ST_ESTACION *estacion, char *nomTren){
@@ -158,25 +156,25 @@ void estadoTren (ST_ESTACION *estacion, char *nomTren){
 
 bool processCommand(ST_ESTACION *estacion, char *command, int new_socket){
  
-    char *action = strtok(command, " ");// saca la accion
+    char *action = strtok(command, " ");
     
-    if(strcmp(action, "estadoEstacion")==0){
+    if(strcmp(action, "estadoEstacion") == 0){
         showEstacion(estacion);
         return true;
     }
     
-    if(strcmp(action, "partir")==0){
+    if(strcmp(action, "partir") == 0){
         partirTren(estacion, command, new_socket);
         return true;
     }
     
-    if(strcmp(action, "ayuda")==0){
+    if(strcmp(action, "ayuda") == 0){
         commandList();
         return true;
     }
     
-    if(strcmp(action, "eliminar")==0){      
-        if(deleteTren(estacion, strtok(NULL, " "))==0){// estacion , nomTren
+    if(strcmp(action, "eliminar") == 0){      
+        if(deleteTren(estacion, strtok(NULL, " ")) == 0){
             printf("Se elimino exitosamente!\n");
         }
         else{
@@ -185,21 +183,22 @@ bool processCommand(ST_ESTACION *estacion, char *command, int new_socket){
         return true;
     }
     
-    if(strcmp(action,"estadoTren")==0){
-        estadoTren(estacion, strtok(NULL, " "));//estacion, nomTren
+    if(strcmp(action,"estadoTren") == 0){
+        estadoTren(estacion, strtok(NULL, " "));
         return true;
     }
     
-    if(strcmp(action, "limpiar")==0){
+    if(strcmp(action, "limpiar") == 0){
         system("clear");
         return true;
     }
     
-    if(strcmp(action, "solicitarAnden")==0){
-        ST_TREN *tren = delete( &estacion->colaDeEspera, strtok(NULL, " "));
+    if(strcmp(action, "solicitarAnden") == 0){
+        ST_TREN *tren = deleteTrenInQueue( &estacion->colaDeEspera, strtok(NULL, " "));
         solicitaAnden(tren, estacion);
         return true;
     }
+   
     return false;
 }
 
@@ -209,7 +208,7 @@ void *commandEstacion(void *station){
     
     //pthread_mutex_lock(&mutex);
     
-    while(strcmp(command, "salir")!=0){
+    while(strcmp(command, "salir")!=0 && strcmp(command, "actualizar" )!=0){
         while(!processCommand(estacion, command, estacion->new_socket)){
             printf("comando desconocido\n");
             command = requestCommand(estacion);
