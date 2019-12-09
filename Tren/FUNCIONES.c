@@ -118,7 +118,7 @@ char *parceoArgv(char *tren, char *argv[]){// <./tren> <accion> <path/nomTren>
 }
 
 char *procesoArgumentos (char *argv[]){
-    char *tren = (char*)malloc(sizeof(char)*LONGTREN+1);
+    char *tren = (char*)malloc(sizeof(char) * LONGTREN + 1);
     
     if(parceoArgv(tren ,argv) == NULL){
         return NULL;
