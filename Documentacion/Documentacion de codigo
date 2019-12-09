@@ -1,0 +1,340 @@
+------------------------------------------------------FN_COMANDOS.h----------------------------------------------------------------------------
+
+/**
+ * @brief Permite ingresar comandos en la estacion.
+ * @estacion La estructura de la estaciin.
+ * @return void.
+ */
+void *commandEstacion(void *estacion);
+
+/**
+ * @brief Concatena un mensaje.
+ * @cad1 Cadena de texto.
+ * @cad2 Cadena de texto.
+ * @cad3 Cadena de texto.
+ * @cad4 Cadena de texto.
+ * @return Mensaje concatenado.
+ */
+char *msgCat(const char *cad1, const char *cad2, const char*cad3, const char *cad4);
+
+/**
+ * @brief Solicita un comando.
+ * @estacion Estructura de la estacion.
+ * @return El comando solicitado.
+ */
+char *requestCommand(ST_ESTACION *estacion);
+
+/**
+ * @brief Muestra el estado de la estacion.
+ * @estacion Estructura de la estacion.
+ * @return void.
+ */
+void showEstacion(ST_ESTACION *estacion);
+
+/**
+ * @brief Busca un tren el la estacion.
+ * @nomTren B Nombre del tren que se desea buscar.
+ * @estacion Estructura de la estacion
+ * @return El tren que se solicito.
+ */
+ST_TREN *searchTren (ST_ESTACION *estacion, char *nomTren);
+
+/**
+ * @brief Procesa el comando solicitado.
+ * @estacion Estructura de la estacion.
+ * @command Comando solicitado.
+ * @new_socket Numero del socket que se usa para la conexion.
+ * @return true o false, si el comando se pudo procesar.
+ */
+bool processCommand(ST_ESTACION *estacion, char *command, int new_socket);
+
+/**
+ * @brief Muestra el estado de un tren solicitado.
+ * @estacion Estructura de la estacion.
+ * @nomTren Nombre del tren del cual se quiere ver el estado.
+ * @return void.
+ */
+void estadoTren (ST_ESTACION *estacion, char *nomTren);
+
+/**
+ * @brief Muestra la lista de comandos permitidos.
+ * @return void.
+ */
+void commandList();
+
+/**
+ * @brief Elimina un tren especifico.
+ * @estacion Estructura de la estacion.
+ * @nomTren Nombre del tren.
+ * @return 0, si se pudo eliminar el tren. 1, si no se pudo eliminar el tren.
+ */
+int deleteTren(ST_ESTACION *estacion,char *nomTren);
+
+/**
+ * @brief Envia un tren especifico a una estacion especifica.
+ * @estacion Estructura de la estacion.
+ * @command Comando solicitado.
+ * @new_socket Numero del socket que se usa para la conexion.
+ * @return 0, si pudo partir el tren. 1, si no pudo partir.
+ */
+int partirTren(ST_ESTACION *estacion, char *command, int new_socket );
+
+					
+------------------------------------------------------FN_ESTACION.h----------------------------------------------------------------------------
+
+/**
+ * @brief Inicialiaza el vector de los clientes sockets.
+ * @client_socket Vector de clientes sockets.
+ * @return 0
+ */    
+void inicializaClientSockets(int client_socket[]);
+
+/**
+ * @brief Inicializa los valores basicos a la estacion.
+ * @estacion Estructura de la estacion.
+ * @return void.
+ */
+void initializaEstacion (ST_ESTACION *estacion);
+
+/**
+ * @brief Envia un buffer un servidor/cliente Sockets.
+ * @new_socket Socket de la conexion.
+ * @message Una cadena con el buffer.
+ * @return void.
+ */
+void sendMsg(int new_socket,char *message);
+
+/**
+ * @brief Recibe el buffer de un servidor/cliente Sockets.
+ * @new_socket Socket de la conexion.
+ * @buffer Una cadena con el buffer.
+ * @return void
+ */
+void recvMsg(int new_socket,char *buffer);
+
+/**
+ * @brief Añade un socket al vector de clientes.
+ * @client_socket Vector con los clientes
+ * @new_socket Nuevo socket.
+ * @return void.
+ */
+void addSocket(int client_socket[],int new_socket);
+
+/**
+ * @brief Convierte una cadena de texto a una estructura del tipo tren.
+ * @tren Estructura del tipo tren.
+ * @buffer Datos del tren en forma de cadena.
+ * @accion Accion solicitada
+ * @return void
+ */
+void converToStruct(ST_TREN *tren,char *buffer,char *accion);
+
+/**
+ * @brief Muestra el estado del anden.
+ * @estacion Estructura de la estacion.
+ * @return void
+ */
+void showAnden(ST_ESTACION *estacion);
+
+/**
+ * @brief Registra un tren en la estacion, lo ingresa a la cola de espera.
+ * @tren Estructura del tren.
+ * @estacion Estrutura de la estacion.
+ * @return void
+ */
+void registrar(ST_TREN *tren,ST_ESTACION *estacion);
+
+/**
+ * @brief Procesa la accion solicitada y la ejecuta.
+ * @tren Estructura del tren.
+ * @accion Accion solicitada para ser ejecutada.
+ * @estacion Estructura de la estacion
+ * @return void
+ */
+void processAction (ST_TREN *tren,char *accion,ST_ESTACION *estacion);
+
+/**
+ * @brief Completa el estado del tren en anden.
+ * @tren Estructura del tren.
+ * @estacion Estructura de la estacion.
+ * @return void
+ */
+void completeStateTrainAnden (ST_TREN *tren, ST_ESTACION *estacion);
+
+/**
+ * @brief Carga la configuracion de la estacion.
+ * @argv Cadena de texto del argumento.
+ * @estacion Estructura de la estacion.
+ * @return void
+ */
+int loadConfigEstacion (ST_ESTACION *estacion, char *argv);
+
+/**
+ * @brief Crea un hilo.
+ * @estacion Estructura de la estacion.
+ * @return void
+ */
+void createThread(ST_ESTACION *estacion);
+
+/**
+ * @brief Termina el proceso tren.
+ * @pID PID del proceso.
+ * @return void
+ */
+void killProcess(int pID);
+
+/**
+ * @brief Crea el proceso tren con los datos del tren.
+ * @tren Estructura del tren.
+* @return void
+ */
+void createProcess(ST_TREN *tren);
+
+/**
+ * @brief Crea el path del archivo de registro de trenes de la estacion.
+ * @estacion Estructura de la estacion.
+ * @return void
+ */
+char *createPath (ST_ESTACION *estacion);
+
+/**
+ * @brief Registra los trenes que pasan por la estacion.
+ * @estacion Estructura de la estacion.
+ * @buffer Los datos del tren en forma de cadena de texto.
+ * @return void
+ */
+void trenReport(ST_ESTACION *estacion, char *buffer);
+
+/**
+ * @brief Procesa la accion, puede ser registrar o solicitar anden.
+ * @tren Estrutura del tren.
+ * @accion Accion solicitada.
+ * @estacion Estructura de la estacion.
+ * @return void
+ */
+void processAction (ST_TREN *tren, char *accion, ST_ESTACION *estacion);
+
+/**
+ * @brief Crea una estacion.
+ * @argv Cadena de texto del argumento.
+ * @return void
+ */
+void servidor(char *argv);
+
+/**
+ * @brief Procesa el tren llegado a la estacion.
+ * @tren Estrutura del tren.
+ * @buffer Buffer del socket.
+ * @estacion Estructura de la estacion.
+ * @accion Accion a realizar.
+ * @return void
+ */
+void processTren(ST_ESTACION *estacion, ST_TREN *tren, char *buffer, char *accion);
+
+/**
+ * @brief Procesa la accion, puede ser registrar o solicitar anden.
+ * @tren Estrutura del tren.
+ * @accion Accion solicitada.
+ * @estacion Estructura de la estacion.
+ * @return void
+ */
+void processBuffer(ST_TREN *tren, ST_ESTACION *estacion, char *buffer, int new_socket);
+
+/**
+ * @brief Convierte una estructura a una cadena de texto y la retorna.
+ * @tren Estrutura del tren.
+ * @accion Accion solicitada.
+ * @return La estructura convertida a cadena
+ */
+char *converToChar (ST_TREN *tren, char *accion);
+
+/**
+ * @brief El tren solicita el anden de la estacion.
+ * @tren Estrutura del tren.
+ * @estacion Estructura de la estacion.
+ * @return void
+ */
+void solicitaAnden (ST_TREN *tren, ST_ESTACION *estacion);
+
+
+------------------------------------------------------FN_TREN.h--------------------------------------------------------------------------------
+
+/**
+*@brief Abre el archivo de configuracion en el modo requerido
+*@path  Path del archivo
+*@mode Modo de apertura del archivo
+*@return Puntero del archivo de tipo
+*/
+FILE *modeOpenFile(char *path, char *mode);
+
+/**
+*@brief Obtiene el puerto que se requiere para la conexion, a traves del nombre de la estacion 
+*@nomEstacion Nombre de la estacion
+*@return Puntero del archivo de tipo *FILE
+*/
+int getPort(char *nomEstacion);
+
+/**
+*@brief Obtiene la ip que se requiere para la conexion, a traves del nombre de la estacion 
+*@nomEstacion Nombre de la estacion
+*@return Puntero del archivo de tipo *FILE
+*/
+char *getIP (char *nomEstacion);
+ 
+/**
+*@brief Establece una conexion del tipo cliente, a un ip y un puerto en especifico
+*@puerto Numero del puerto 
+*@ip Cadena de texto
+*@return 0 o 1, si se pudo realizar la conexion
+*/
+int cliente(char *trenLinea, int puerto, char *ip);
+
+/**
+*@brief Muestra el estado de un tren en especifico 
+*@tren Estructura del tren
+*@return void
+*/
+void showTren(ST_TREN *tren);
+
+-----------------------------------------------------FN_COLADEESPERA.h-------------------------------------------------------------------------
+
+/**
+ * @brief Muestra la cola de espera.
+ * @lista Estructura de cola.
+ * @return void
+ */
+void showQueue(ST_NODO *lista);
+
+/**
+ * @brief Disminuye el combustible de todos los tren que estan en la estacion.
+ * @estacion La estructura de la estacion.
+ * @return void
+ */
+void subtractFuel(ST_ESTACION *estacion);
+
+/**
+ * @brief Inserte un tren en lista de forma ordenada.
+ * @lista La cola de espera.
+ * @tren Un puntero de la estructura del tren.
+ * @return void
+ */
+void insertOrdered(ST_NODO **lista, ST_TREN *tren);
+
+
+/**
+ * @brief Busca un tren en la cola de espera y lo retorna.
+ * @lista La cola de espera.
+ * @nomTren nombre del tren.
+ * @return tren buscado
+ */
+ST_TREN *searchInQueue(ST_NODO *lista, char *nomTren);
+
+/**
+ * @brief Elimina un tren deseado de la cola de espera.
+ * @lista La cola de espera.
+ * @nomTren Nombre del tren.
+ * @return El tren que fue eliminado
+ */
+ST_TREN *deleteTrenInQueue(ST_NODO **lista, char *nomTren);
+
+
