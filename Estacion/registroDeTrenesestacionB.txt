@@ -1,0 +1,75 @@
+registrar TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+registrar TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenA 1 10 100 estacionA estacionB
+solicitarAnden TrenB 2 100 50 estacionB estacionA
+
+solicitarAnden TrenB 2 100 50 estacionB estacionA
+
+reenviado registrar  TrenA 1 80 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+registra
+registra
+registrar  TrenA 1 80 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 40 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 80 10 estacionA estacionA
+solicitarAnden  TrenA 1 40 10 estacionA estacionA
+registrar  TrenA 1 80 10 estacionA estacionA
+registrar  TrenA 1 40 10 estacionA estacionA
+registrar TrenB 2 100 50 estacionB estacionA
+
+registrar TrenB 2 100 50 estacionB estacionA
+
+registrar TrenB 2 100 50 estacionB estacionA
+
+registrar  TrenA 1 80 10 estacionA estacionB
+registrar  TrenA 1 80 10 estacionA estacionB
+registrar  TrenA 1 40 10 estacionA estacionB
+registrar  TrenA 1 80 10 estacionA estacionB
+registrar  TrenA 1 80 10 estacionA estacionB
+registrar  TrenA 1 80 10 estacionA estacionB
+registrar  TrenA 1 80 10 estacionA estacionB
+registrar  TrenA 1 40 10 estacionA estacionB
+solicitarAnden  TrenA 1 80 10 estacionA estacionB
+solicitarAnden  TrenA 1 40 10 estacionA estacionB
+solicitarAnden  TrenA 1 80 10 estacionA estacionB
