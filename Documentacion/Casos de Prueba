@@ -19,6 +19,16 @@ f) Ingresar "estadoEstacion" en la terminal de la estacionB.
 Resultado: Muestra al tren llegado desde la estacionA en la lista de espera de la estacionB.
 
 3- levantar 2 estaciones con un tren cada una, enviar cada tren a la otra estacion.
+a) Ingresar "./estacion estacionA" en la terminal de estacion.
+b) Ingresar "./estacion estacionB" en otra terminal de estacion.
+c) Ingresar "./tren registrar trenA" en la terminal de trenes para crear un tren.
+d) Ingresar "./tren registrar trenB" en la terminal de trenes para crear otro tren.
+e) Ingresar "solicitarAnden TrenA" en la terminal de estacionA.
+f) Ingresar "solicitarAnden TrenB" en la terminal de estacionB.
+g) Ingresar "partir TrenA estacionB" en la terminal de estacionA.
+h) Ingresar "partir TrenB estacionA" en la terminal de estacionB.
+i) Ingresar "actualizar" en ambas terminales de Estaciones
+Resultado: En ambas terminales nos va a aparecer "Llego el tren x de la estacion origen"
 
 
 4 levantar 2 estaciones, crear 3 trenes en estacion A, crear 2 trenes en estacion B y enviar uno a Estacion A.
@@ -27,4 +37,4 @@ Resultado: Muestra al tren llegado desde la estacionA en la lista de espera de l
 
 6- intentar enviar un tren que no se encuentra en Anden hacia otra estacion.
 
-7- 
+finalizar algun tren, poner alguno con poco combustible, intercambiar el tren que esta en el anden con otro
