@@ -18,6 +18,7 @@ e) Ingresar "partir TrenA estacionB" en la terminal de estacionA.
 f) Ingresar "estadoEstacion" en la terminal de la estacionB.
 Resultado: Muestra al tren llegado desde la estacionA en la lista de espera de la estacionB.
 
+
 3- levantar 2 estaciones con un tren cada una, enviar cada tren a la otra estacion.
 a) Ingresar "./estacion estacionA" en la terminal de estacion.
 b) Ingresar "./estacion estacionB" en otra terminal de estacion.
@@ -30,11 +31,34 @@ h) Ingresar "partir TrenB estacionA" en la terminal de estacionB.
 i) Ingresar "actualizar" en ambas terminales de Estaciones
 Resultado: En ambas terminales nos va a aparecer "Llego el tren x de la estacion origen"
 
+4-levantar 2 estaciones, crear 1 trenes en estacion A, crear 2 trenes en estacion B y enviar un tren de la estacion B a la Estacion C.
+a)Ingresar "./estacion estacionA" en la terminal de estacion.
+b)Ingresar "./estacion estacionB" en otra terminal de estacion.
+c)Ingresar "./tren solicitarAnden trenA" en la terminal de trenes para crear un tren.
+d)Ingresar "./tren solicitarAnden trenB" en la terminal de trenes para crear un tren.
+e)Ingresar "./tren solicitarAnden trenF" en la terminal de trenes para crear un tren.
+f)Ingresar "partir TrenF estacionC" en la terminal de estacionB.
+resultado : En la Estacion C estara el Tren F. 
 
-4 levantar 2 estaciones, crear 3 trenes en estacion A, crear 2 trenes en estacion B y enviar uno a Estacion A.
 
-5- levantar 3 estaciones, crear 2 trenes en A y enviarlas a B y C y retornarlas.
+5- levantar 3 estaciones, crear 2 trenes en la Estacion A y enviarlos a la Estacion B luego a la Estacion C. Finalizar los trenes de la Estacion C
+a)Ingresar "./estacion estacionA" en la terminal de estacion.
+b)Ingresar "./estacion estacionB" en la terminal de otra estacion.
+c)Ingresar "./estacion estacionC" en la terminal de otra estacion.
+d)Ingresar "./tren solicitarAnden trenD" en la terminal de trenes para crear un tren.
+e)Ingresar "./tren solicitarAnden trenE" en la terminal de trenes para crear un tren.
+f)Ingresar "actualizar" en la terminal de la Estacion A.
+g)Ingresar "partir TrenD estacionB" en la terminal de estacionA.
+h)Ingresar "partir TrenE estacionB" en la terminal de estacionA.
+i)Ingresar "actualizar" en la terminal de la Estacion B.
+j)Ingresar "partir TrenD estacionC" en la terminal de estacionB.
+k)Ingresar "partir TrenE estacionC" en la terminal de estacionB.
+l)Ingresar "actualizar" en la terminal de la Estacion C.
+m)Ingresar "eliminar TrenD" en la terminal de la Estacion C.
+n)Ingresar "eliminar TrenE" en la terminal de la Estacion C.
+
 
 6- intentar enviar un tren que no se encuentra en Anden hacia otra estacion.
+
 
 finalizar algun tren, poner alguno con poco combustible, intercambiar el tren que esta en el anden con otro
