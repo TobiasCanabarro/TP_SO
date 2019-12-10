@@ -104,6 +104,8 @@ int partirTren(ST_ESTACION *estacion, char *command, int new_socket ){
     if ( strcmp(estacion->ocupaAnden.modelo, nomTren) != 0 ){
         return 1;
     }
+    strcpy(estacion->ocupaAnden.infoTren.estacionOrigen, estacion->nombreEstacion);
+    strcpy(estacion->ocupaAnden.infoTren.estacionDestino, estacionDestino);
 
     char *trenLinea = converToChar ( &estacion->ocupaAnden, estacion->ocupaAnden.infoTren.motivo);
 
@@ -120,10 +122,9 @@ int partirTren(ST_ESTACION *estacion, char *command, int new_socket ){
  
     int port = getPort(estacionDestino);
     
-    printf("ANTES DEL CLIENTE\n");
     cliente(trenLinea, port, ip);
     
-    printf("El %s partio %s\n",nomTren, estacionDestino );
+    printf("El %s partio a la %s\n",nomTren, estacionDestino);
     return 0;
 }
 
