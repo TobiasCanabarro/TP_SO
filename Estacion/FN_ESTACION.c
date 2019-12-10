@@ -159,12 +159,10 @@ void createProcess(ST_TREN *tren){
         case 0://HIJO    
             execlp(PATH, tren->infoTren.motivo, tren->modelo, NULL);
             tren->pID = getpid();
-            printf("PID HIJO %d\n", tren->pID);
             sleep(MAX_SLEEP);
             break;
         case 1://PADRE
             wait(&timeWait);
-            printf("PID PADRE %d\n", getppid());
             break;
     }
 }
@@ -206,12 +204,11 @@ void processAction (ST_TREN *tren, char *accion, ST_ESTACION *estacion){
 
 void processTren(ST_ESTACION *estacion, ST_TREN *tren, char *buffer, char *accion){
     sendMsg(tren->new_socket, msgCat("El tren ", tren->modelo, " reside en la " , estacion->nombreEstacion));
-    createProcess(tren);
+    //createProcess(tren); Temporal
     processAction(tren, accion, estacion);   
 }
 
 void processBuffer(ST_TREN *tren, ST_ESTACION *estacion, char *buffer, int new_socket){
-    printf("BUFFER  : %s\n", buffer);//temporal
     
     char *accion = (char*)malloc(sizeof(char) * 15);
     tren->new_socket = new_socket;
