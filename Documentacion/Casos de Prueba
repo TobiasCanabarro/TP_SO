@@ -1,6 +1,7 @@
 CASOS DE PRUEBA:
 
 1- Levantar estacion, crear 3 trenes y ver el estado de la estacion.
+
 a) Ingresar "./estacion estacionA" en la terminal de estacion.
 b) Ingresar "./tren registrar trenA" en la terminal de trenes para crear un tren.
 c) Ingresar "./tren registrar trenC" en la terminal de trenes para crear un tren.
@@ -9,7 +10,8 @@ e) Ingresar "estadoEstacion" en la terminal de estacionA.
 resultado: Muestra por pantalla a los trenes en la cola de espera de la estacionA.
 
 
-2- levantar 2 estaciones, enviar un tren de una a otra.
+2- levantar 2 estaciones, y envia un tren hacia otra estacion.
+
 a) Ingresar "./estacion estacionA" en la terminal de estacion.
 b) Ingresar "./estacion estacionB" en otra terminal de estacion.
 c) Ingresar "./tren registrar trenA" en la terminal de trenes para crear un tren.
@@ -20,6 +22,7 @@ Resultado: Muestra al tren llegado desde la estacionA en la lista de espera de l
 
 
 3- levantar 2 estaciones con un tren cada una, enviar cada tren a la otra estacion.
+
 a) Ingresar "./estacion estacionA" en la terminal de estacion.
 b) Ingresar "./estacion estacionB" en otra terminal de estacion.
 c) Ingresar "./tren registrar trenA" en la terminal de trenes para crear un tren.
@@ -28,10 +31,12 @@ e) Ingresar "solicitarAnden TrenA" en la terminal de estacionA.
 f) Ingresar "solicitarAnden TrenB" en la terminal de estacionB.
 g) Ingresar "partir TrenA estacionB" en la terminal de estacionA.
 h) Ingresar "partir TrenB estacionA" en la terminal de estacionB.
-i) Ingresar "actualizar" en ambas terminales de Estaciones
+i) Ingresar "actualizar" en ambas terminales de Estaciones.
+
 Resultado: En ambas terminales nos va a aparecer "Llego el tren x de la estacion origen"
 
 4-levantar 2 estaciones, crear 1 trenes en estacion A, crear 2 trenes en estacion B y enviar un tren de la estacion B a la Estacion C.
+
 a)Ingresar "./estacion estacionA" en la terminal de estacion.
 b)Ingresar "./estacion estacionB" en otra terminal de estacion.
 c)Ingresar "./tren solicitarAnden trenA" en la terminal de trenes para crear un tren.
@@ -41,7 +46,8 @@ f)Ingresar "partir TrenF estacionC" en la terminal de estacionB.
 resultado : En la Estacion C estara el Tren F. 
 
 
-5- levantar 3 estaciones, crear 2 trenes en la Estacion A y enviarlos a la Estacion B luego a la Estacion C. Finalizar los trenes de la Estacion C
+5- levantar 3 estaciones, crear 2 trenes en la Estacion A y enviarlos a la Estacion B luego a la Estacion C. Finalizar los trenes de la Estacion C.
+
 a)Ingresar "./estacion estacionA" en la terminal de estacion.
 b)Ingresar "./estacion estacionB" en la terminal de otra estacion.
 c)Ingresar "./estacion estacionC" en la terminal de otra estacion.
@@ -56,9 +62,47 @@ k)Ingresar "partir TrenE estacionC" en la terminal de estacionB.
 l)Ingresar "actualizar" en la terminal de la Estacion C.
 m)Ingresar "eliminar TrenD" en la terminal de la Estacion C.
 n)Ingresar "eliminar TrenE" en la terminal de la Estacion C.
+resultado : Los trenes que llegaron a la Estacion C finalizaran.
+
+6- Crea 2 estaciones, crea un tren y se envia a la estacionB pero antes se solicita el anden luego parte a dicha estacion.
+
+a)Ingresar "./estacion estacionA" en la terminal de estacion.
+b)Ingresar "./estacion estacionB" en la terminal de estacion.
+c)Ingresar "./tren registrar TrenF" en la terminal de trenes.
+d)Ingresar "solicitarAnden TrenF" en la terminal de la estacionA.
+e)Ingresar "partir TrenF estacionB" en la terminal de la estacionA.
+resultado : El TrenF residira en la Estacion B.
+
+7-Crea 2 estaciones, crea un tren. Las estaciones se envian el tren para un de caso de poco combustible pra luego finalizar el tren.
+
+a)Ingresar "./estacion estacionA" en la terminal de estacion.
+b)Ingresar "./estacion estacionC" en la terminal de otra estacion.
+c)Ingresar "./tren solicitarAnden TrenE" en la terminal de trenes.
+d)Ingresar "partir TrenE estacionC" en la terminal de la estacion A.
+e)Ingresar "partir TrenE estacionA" en la terminal de la estacion C.					
+f)Ingresar "eliminar TrenE" en la terminal de la estacionC para finalizar el recorrido.
+resultado : El TrenE tendra poco combustible y tendra que ser finalizado.
+
+8- Crea una estacion y crea 2 trenes.Se crea el TrenE y TrenA y se quiere partir el TrenE, pero primero se solicita el anden. Se intercambia el TrenA que esta en el anden por el TrenE que tiene mas privilegio luego parte a la estacion C.
+
+a) Ingresar "./estacion estacionA" en la terminal de estacion.
+b) Ingresar "./estacion estacionC" en la terminal de otra estacion.
+c) Ingresar "./tren registrar TrenE" en la terminal de trenes.
+d) Ingresar "./tren solicitarAnden TrenA" en otra terminal de trenes.
+e) Ingresar "solicitarAnden TrenE" en la terminal de la estacion A.
+f)Ingresar "partir TrenE estacionC" en la terminal de la estacion A.
+resultado : El TrenE estara en la estacion C.
 
 
-6- intentar enviar un tren que no se encuentra en Anden hacia otra estacion.
 
 
-finalizar algun tren, poner alguno con poco combustible, intercambiar el tren que esta en el anden con otro
+
+
+
+
+
+
+
+
+
+
