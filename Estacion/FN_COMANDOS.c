@@ -130,7 +130,7 @@ int partirTren(ST_ESTACION *estacion, char *command, int new_socket ){
 
 void commandList(){
     printf("--------------------------------------------------------------------\n\t\t\tCOMANDOS PERMITIDOS :\n");
-    printf("estadoTren <nombreTren>, eliminar <nombreTren>, solicitarAnden <nombreTren>\npartir <nombreTren> <nombreEstacion>\nestadoEstacion, ayuda, limpiar,actualizar\n");
+    printf("estadoTren <nombreTren>, eliminar <nombreTren>, solicitarAnden <nombreTren>\npartir <nombreTren> <nombreEstacion>\nestadoEstacion, ayuda, limpiar, actualizar, registroDeTrenes\n");
 }
 
 void estadoTren (ST_ESTACION *estacion, char *nomTren){
@@ -145,6 +145,21 @@ void estadoTren (ST_ESTACION *estacion, char *nomTren){
         tren->modelo,tren->infoTren.idTren,tren->combustible,tren->tiempoEspera,
         tren->infoTren.estacionOrigen,tren->infoTren.estacionDestino);   
     }
+}
+
+void showTrenReport (ST_ESTACION *estacion){
+    char *path = (char*)malloc(sizeof(char)* COMMAND_LEN + 1);
+    char aux[] = "registroDeTrenes";
+    strcpy (path, aux);
+    path = strcat (path, estacion->nombreEstacion);
+    path = strcat (path, ".txt");
+    FILE *pFile  = modeOpenFile(path ,"r");
+    char linea [80];
+     printf("--------------------------------------------------------------------\n\t\t\tREGISTRO DE TRENES :\n");
+    while(fgets(linea, 80, pFile)){
+        printf("%s", linea);
+    }
+    fclose (pFile);
 }
 
 bool processCommand(ST_ESTACION *estacion, char *command, int new_socket){
@@ -190,6 +205,11 @@ bool processCommand(ST_ESTACION *estacion, char *command, int new_socket){
     
     if(strcmp(action, "limpiar") == 0){
         system("clear");
+        return true;
+    }
+
+    if(strcmp (action, "registroDeTrenes") == 0){
+        showTrenReport (estacion);
         return true;
     }
     

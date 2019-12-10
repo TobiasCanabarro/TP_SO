@@ -20,7 +20,7 @@
 #define SUBSTRACFUEL 20
 
 #define ipEstacionA "127.0.0.1"
-#define ipEstacionB "127.0.0.1"//"192.168.1.16"
+#define ipEstacionB "192.168.0.35"//"192.168.1.19" <- ip Rober
 #define ipEstacionC "127.0.0.1"
 #define DELETED -1
 #define MAX_SLEEP 1
@@ -179,7 +179,7 @@ char *createPath (ST_ESTACION *estacion){
 
 void trenReport(ST_ESTACION *estacion, char *buffer){
     char *path = createPath(estacion);
-    FILE *pFile = modeOpenFile(path, "a");
+    FILE *pFile = modeOpenFile(path, "w");
     buffer = strcat(buffer, "\n");
     fputs(buffer, pFile);
     fclose(pFile);
